@@ -18,12 +18,8 @@ namespace Microsoft.AspNet.Mvc
         /// </summary>
         protected virtual HashSet<string> ReferenceAssemblies { get; } = new HashSet<string>(StringComparer.Ordinal)
         {
-            "Microsoft.AspNet.Mvc",
-            "Microsoft.AspNet.Mvc.Core",
-            "Microsoft.AspNet.Mvc.ModelBinding",
-            "Microsoft.AspNet.Mvc.Razor",
-            "Microsoft.AspNet.Mvc.Razor.Host",
-            "Microsoft.AspNet.Mvc.Rendering",
+            "Microsoft.AspNet.Mvc.Core",            
+            "Microsoft.AspNet.Mvc.Razor.Host"
         };
 
         private readonly ILibraryManager _libraryManager;
