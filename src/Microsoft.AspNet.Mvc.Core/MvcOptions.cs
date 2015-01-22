@@ -54,7 +54,7 @@ namespace Microsoft.AspNet.Mvc
         }
 
         /// <summary>
-        /// Used to specify mapping between the Url Format and corresponding <see cref="MediaTypeHeaderValue"/>.
+        /// Used to specify mapping between the URL Format and corresponding <see cref="MediaTypeHeaderValue"/>.
         /// </summary>
         public FormatterMappings FormatterMappings { get; }
 
