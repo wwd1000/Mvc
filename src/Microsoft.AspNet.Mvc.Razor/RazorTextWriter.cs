@@ -5,8 +5,10 @@ using System;
 using System.IO;
 using System.Text;
 using System.Threading.Tasks;
+using Microsoft.AspNet.HtmlContent;
 using Microsoft.AspNet.Mvc.Rendering;
 using Microsoft.Framework.Internal;
+using Microsoft.Framework.WebEncoders;
 
 namespace Microsoft.AspNet.Mvc.Razor
 {
@@ -33,6 +35,8 @@ namespace Microsoft.AspNet.Mvc.Razor
             UnbufferedWriter = unbufferedWriter;
             BufferedWriter = new StringCollectionTextWriter(encoding);
             TargetWriter = BufferedWriter;
+
+            Encoder = new HtmlEncoder();
         }
 
         /// <inheritdoc />
@@ -40,6 +44,8 @@ namespace Microsoft.AspNet.Mvc.Razor
         {
             get { return BufferedWriter.Encoding; }
         }
+
+        public IHtmlEncoder Encoder { get; }
 
         /// <inheritdoc />
         public bool IsBuffering { get; private set; } = true;
@@ -60,10 +66,10 @@ namespace Microsoft.AspNet.Mvc.Razor
         /// <inheritdoc />
         public override void Write(object value)
         {
-            var htmlString = value as HtmlString;
-            if (htmlString != null)
+            var htmlContent = value as IHtmlContent;
+            if (htmlContent != null)
             {
-                htmlString.WriteTo(TargetWriter);
+                htmlContent.WriteTo(TargetWriter, Encoder);
                 return;
             }
 
@@ -196,14 +202,15 @@ namespace Microsoft.AspNet.Mvc.Razor
         public void CopyTo(TextWriter writer)
         {
             writer = UnWrapRazorTextWriter(writer);
-            BufferedWriter.CopyTo(writer);
+            BufferedWriter.Content.WriteTo(writer, Encoder);
         }
 
         /// <inheritdoc />
         public Task CopyToAsync(TextWriter writer)
         {
             writer = UnWrapRazorTextWriter(writer);
-            return BufferedWriter.CopyToAsync(writer);
+            BufferedWriter.Content.WriteTo(writer, Encoder);
+            return Task.FromResult(0);
         }
 
         private static TextWriter UnWrapRazorTextWriter(TextWriter writer)

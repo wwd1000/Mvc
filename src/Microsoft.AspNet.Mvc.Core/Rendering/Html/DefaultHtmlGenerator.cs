@@ -9,6 +9,7 @@ using System.Globalization;
 using System.Linq;
 using System.Reflection;
 using System.Text;
+using Microsoft.AspNet.HtmlContent;
 using Microsoft.AspNet.Mvc.Core;
 using Microsoft.AspNet.Mvc.ModelBinding;
 using Microsoft.AspNet.Mvc.ModelBinding.Validation;
@@ -152,7 +153,7 @@ namespace Microsoft.AspNet.Mvc.Rendering
             ModelExplorer modelExplorer,
             string expression)
         {
-            var tagBuilder = new TagBuilder("input", _htmlEncoder);
+            var tagBuilder = new TagBuilder("input");
             tagBuilder.MergeAttribute("type", GetInputTypeString(InputType.Hidden));
             tagBuilder.MergeAttribute("value", "false");
 
@@ -265,7 +266,7 @@ namespace Microsoft.AspNet.Mvc.Rendering
                 return null;
             }
 
-            var tagBuilder = new TagBuilder("label", _htmlEncoder);
+            var tagBuilder = new TagBuilder("label");
             var idString =
                 TagBuilder.CreateSanitizedId(GetFullHtmlFieldName(viewContext, expression), IdAttributeDotReplacement);
             tagBuilder.Attributes.Add("for", idString);
@@ -440,10 +441,8 @@ namespace Microsoft.AspNet.Mvc.Rendering
             // Convert each ListItem to an <option> tag and wrap them with <optgroup> if requested.
             var listItemBuilder = GenerateGroupsAndOptions(optionLabel, selectList);
 
-            var tagBuilder = new TagBuilder("select", _htmlEncoder)
-            {
-                InnerHtml = listItemBuilder.ToString()
-            };
+            var tagBuilder = new TagBuilder("select");
+            tagBuilder.SetInnerText(listItemBuilder.ToString());
             tagBuilder.MergeAttributes(GetHtmlAttributeDictionaryOrNull(htmlAttributes));
             tagBuilder.MergeAttribute("name", fullName, true /* replaceExisting */);
             tagBuilder.GenerateId(fullName, IdAttributeDotReplacement);
@@ -507,7 +506,7 @@ namespace Microsoft.AspNet.Mvc.Rendering
                 value = modelExplorer.Model.ToString();
             }
 
-            var tagBuilder = new TagBuilder("textarea", _htmlEncoder);
+            var tagBuilder = new TagBuilder("textarea");
             tagBuilder.GenerateId(fullName, IdAttributeDotReplacement);
             tagBuilder.MergeAttributes(GetHtmlAttributeDictionaryOrNull(htmlAttributes), true);
             if (rows > 0)
@@ -531,7 +530,11 @@ namespace Microsoft.AspNet.Mvc.Rendering
 
             // The first newline is always trimmed when a TextArea is rendered, so we add an extra one
             // in case the value being rendered is something like "\r\nHello".
-            tagBuilder.InnerHtml = Environment.NewLine + _htmlEncoder.HtmlEncode(value);
+
+            var innerHtml = new BufferedHtmlContent();
+            innerHtml.Append(StringHtmlContent.FromEncodedText(Environment.NewLine));
+            innerHtml.Append(value);
+            tagBuilder.InnerHtml = innerHtml;
 
             return tagBuilder;
         }
@@ -601,7 +604,7 @@ namespace Microsoft.AspNet.Mvc.Rendering
             {
                 tag = viewContext.ValidationMessageElement;
             }
-            var tagBuilder = new TagBuilder(tag, _htmlEncoder);
+            var tagBuilder = new TagBuilder(tag);
             tagBuilder.MergeAttributes(GetHtmlAttributeDictionaryOrNull(htmlAttributes));
 
             // Only the style of the span is changed according to the errors if message is null or empty.
@@ -654,7 +657,7 @@ namespace Microsoft.AspNet.Mvc.Rendering
                 {
                     headerTag = viewContext.ValidationSummaryMessageElement;
                 }
-                var messageTag = new TagBuilder(headerTag, _htmlEncoder);
+                var messageTag = new TagBuilder(headerTag);
                 messageTag.SetInnerText(message);
                 wrappedMessage = messageTag.ToString(TagRenderMode.Normal) + Environment.NewLine;
             }
@@ -676,7 +679,7 @@ namespace Microsoft.AspNet.Mvc.Rendering
 
                     if (!string.IsNullOrEmpty(errorText))
                     {
-                        var listItem = new TagBuilder("li", _htmlEncoder);
+                        var listItem = new TagBuilder("li");
                         listItem.SetInnerText(errorText);
                         htmlSummary.AppendLine(listItem.ToString(TagRenderMode.Normal));
                     }
@@ -688,12 +691,10 @@ namespace Microsoft.AspNet.Mvc.Rendering
                 htmlSummary.AppendLine(HiddenListItem);
             }
 
-            var unorderedList = new TagBuilder("ul", _htmlEncoder)
-            {
-                InnerHtml = htmlSummary.ToString()
-            };
+            var unorderedList = new TagBuilder("ul");
+            unorderedList.SetInnerText(htmlSummary.ToString());
 
-            var tagBuilder = new TagBuilder("div", _htmlEncoder);
+            var tagBuilder = new TagBuilder("div");
             tagBuilder.MergeAttributes(GetHtmlAttributeDictionaryOrNull(htmlAttributes));
 
             if (viewContext.ViewData.ModelState.IsValid)
@@ -705,7 +706,7 @@ namespace Microsoft.AspNet.Mvc.Rendering
                 tagBuilder.AddCssClass(HtmlHelper.ValidationSummaryCssClassName);
             }
 
-            tagBuilder.InnerHtml = wrappedMessage + unorderedList.ToString(TagRenderMode.Normal);
+            tagBuilder.InnerHtml = StringHtmlContent.FromEncodedText(wrappedMessage + unorderedList.ToString(TagRenderMode.Normal));
 
             if (formContext != null && !excludePropertyErrors)
             {
@@ -865,12 +866,10 @@ namespace Microsoft.AspNet.Mvc.Rendering
         /// <remarks>
         /// Not used directly in HtmlHelper. Exposed for use in DefaultDisplayTemplates.
         /// </remarks>
-        internal static TagBuilder GenerateOption(SelectListItem item, string encodedText, IHtmlEncoder htmlEncoder)
+        internal static TagBuilder GenerateOption(SelectListItem item, string encodedText)
         {
-            var tagBuilder = new TagBuilder("option", htmlEncoder)
-            {
-                InnerHtml = encodedText,
-            };
+            var tagBuilder = new TagBuilder("option");
+            tagBuilder.SetInnerText(encodedText);
 
             if (item.Value != null)
             {
@@ -926,7 +925,7 @@ namespace Microsoft.AspNet.Mvc.Rendering
             string method,
             object htmlAttributes)
         {
-            var tagBuilder = new TagBuilder("form", _htmlEncoder);
+            var tagBuilder = new TagBuilder("form");
             tagBuilder.MergeAttributes(GetHtmlAttributeDictionaryOrNull(htmlAttributes));
 
             // action is implicitly generated from other parameters, so htmlAttributes take precedence.
@@ -967,7 +966,7 @@ namespace Microsoft.AspNet.Mvc.Rendering
                 throw new ArgumentException(Resources.ArgumentCannotBeNullOrEmpty, nameof(expression));
             }
 
-            var tagBuilder = new TagBuilder("input", _htmlEncoder);
+            var tagBuilder = new TagBuilder("input");
             tagBuilder.MergeAttributes(htmlAttributes);
             tagBuilder.MergeAttribute("type", GetInputTypeString(inputType));
             tagBuilder.MergeAttribute("name", fullName, replaceExisting: true);
@@ -1068,9 +1067,9 @@ namespace Microsoft.AspNet.Mvc.Rendering
             [NotNull] string url,
             object htmlAttributes)
         {
-            var tagBuilder = new TagBuilder("a", _htmlEncoder)
+            var tagBuilder = new TagBuilder("a")
             {
-                InnerHtml = _htmlEncoder.HtmlEncode(linkText),
+                InnerHtml = new StringHtmlContent(linkText),
             };
 
             tagBuilder.MergeAttributes(GetHtmlAttributeDictionaryOrNull(htmlAttributes));
@@ -1254,7 +1253,7 @@ namespace Microsoft.AspNet.Mvc.Rendering
                 TagBuilder groupBuilder = null;
                 if (optGroup != null)
                 {
-                    groupBuilder = new TagBuilder("optgroup", _htmlEncoder);
+                    groupBuilder = new TagBuilder("optgroup");
                     if (optGroup.Name != null)
                     {
                         groupBuilder.MergeAttribute("label", optGroup.Name);
@@ -1285,7 +1284,7 @@ namespace Microsoft.AspNet.Mvc.Rendering
         private string GenerateOption(SelectListItem item)
         {
             var encodedText = Encode(item.Text);
-            var tagBuilder = GenerateOption(item, encodedText, _htmlEncoder);
+            var tagBuilder = GenerateOption(item, encodedText);
 
             return tagBuilder.ToString(TagRenderMode.Normal);
         }

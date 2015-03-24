@@ -138,7 +138,8 @@ namespace Microsoft.AspNet.Mvc.TagHelpers
                 var antiForgeryTagBuilder = Generator.GenerateAntiForgery(ViewContext);
                 if (antiForgeryTagBuilder != null)
                 {
-                    output.PostContent.Append(antiForgeryTagBuilder.ToString(TagRenderMode.SelfClosing));
+                    antiForgeryTagBuilder.IsSelfClosing = true;
+                    output.PostContent.Append(antiForgeryTagBuilder);
                 }
             }
         }

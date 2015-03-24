@@ -8,6 +8,7 @@ using System.Globalization;
 using System.IO;
 using System.Linq;
 using Microsoft.AspNet.Http;
+using Microsoft.AspNet.HtmlContent;
 using Microsoft.AspNet.Mvc.Core;
 using Microsoft.AspNet.Mvc.ModelBinding;
 using Microsoft.Framework.DependencyInjection;
@@ -21,8 +22,8 @@ namespace Microsoft.AspNet.Mvc.Rendering.Internal
         private const string EditorTemplateViewPath = "EditorTemplates";
         public const string IEnumerableOfIFormFileName = "IEnumerable`" + nameof(IFormFile);
 
-        private static readonly Dictionary<string, Func<IHtmlHelper, string>> _defaultDisplayActions =
-            new Dictionary<string, Func<IHtmlHelper, string>>(StringComparer.OrdinalIgnoreCase)
+        private static readonly Dictionary<string, Func<IHtmlHelper, IHtmlContent>> _defaultDisplayActions =
+            new Dictionary<string, Func<IHtmlHelper, IHtmlContent>>(StringComparer.OrdinalIgnoreCase)
             {
                 { "Collection", DefaultDisplayTemplates.CollectionTemplate },
                 { "EmailAddress", DefaultDisplayTemplates.EmailAddressTemplate },

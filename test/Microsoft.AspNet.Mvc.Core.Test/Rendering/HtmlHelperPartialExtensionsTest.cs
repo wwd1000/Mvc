@@ -2,8 +2,11 @@
 // Licensed under the Apache License, Version 2.0. See License.txt in the project root for license information.
 
 using System;
+using System.IO;
 using System.Threading.Tasks;
+using Microsoft.AspNet.HtmlContent;
 using Microsoft.AspNet.Mvc.ModelBinding;
+using Microsoft.Framework.WebEncoders;
 using Moq;
 using Xunit;
 
@@ -11,12 +14,12 @@ namespace Microsoft.AspNet.Mvc.Rendering
 {
     public class HtmlHelperPartialExtensionsTest
     {
-        public static TheoryData<Func<IHtmlHelper, HtmlString>> PartialExtensionMethods
+        public static TheoryData<Func<IHtmlHelper, IHtmlContent>> PartialExtensionMethods
         {
             get
             {
                 var vdd = new ViewDataDictionary(new EmptyModelMetadataProvider());
-                return new TheoryData<Func<IHtmlHelper, HtmlString>>
+                return new TheoryData<Func<IHtmlHelper, IHtmlContent>>
                 {
                     helper => helper.Partial("test"),
                     helper => helper.Partial("test", new object()),
@@ -28,7 +31,7 @@ namespace Microsoft.AspNet.Mvc.Rendering
 
         [Theory]
         [MemberData(nameof(PartialExtensionMethods))]
-        public void PartialMethods_DoesNotWrapThrownException(Func<IHtmlHelper, HtmlString> partialMethod)
+        public void PartialMethods_DoesNotWrapThrownException(Func<IHtmlHelper, IHtmlContent> partialMethod)
         {
             // Arrange
             var expected = new InvalidOperationException();
@@ -60,7 +63,7 @@ namespace Microsoft.AspNet.Mvc.Rendering
             };
             var helper = new Mock<IHtmlHelper>(MockBehavior.Strict);
             helper.Setup(h => h.PartialAsync("test", model, null))
-                  .Returns(Task.FromResult(expected))
+                  .Returns(Task.FromResult<IHtmlContent>(expected))
                   .Verifiable();
             helper.SetupGet(h => h.ViewData)
                   .Returns(viewData);
@@ -81,7 +84,7 @@ namespace Microsoft.AspNet.Mvc.Rendering
             var model = new object();
             var helper = new Mock<IHtmlHelper>(MockBehavior.Strict);
             helper.Setup(h => h.PartialAsync("test", model, null))
-                  .Returns(Task.FromResult(expected))
+                  .Returns(Task.FromResult<IHtmlContent>(expected))
                   .Verifiable();
 
             // Act
@@ -105,7 +108,7 @@ namespace Microsoft.AspNet.Mvc.Rendering
             };
             var helper = new Mock<IHtmlHelper>(MockBehavior.Strict);
             helper.Setup(h => h.PartialAsync("test", model, passedInViewData))
-                  .Returns(Task.FromResult(expected))
+                  .Returns(Task.FromResult<IHtmlContent>(expected))
                   .Verifiable();
             helper.SetupGet(h => h.ViewData)
                   .Returns(viewData);
@@ -127,7 +130,7 @@ namespace Microsoft.AspNet.Mvc.Rendering
             var passedInViewData = new ViewDataDictionary(new EmptyModelMetadataProvider());
             var helper = new Mock<IHtmlHelper>(MockBehavior.Strict);
             helper.Setup(h => h.PartialAsync("test", passedInModel, passedInViewData))
-                  .Returns(Task.FromResult(expected))
+                  .Returns(Task.FromResult<IHtmlContent>(expected))
                   .Verifiable();
 
             // Act
@@ -150,7 +153,8 @@ namespace Microsoft.AspNet.Mvc.Rendering
             var actual = helper.Partial("some-partial");
 
             // Assert
-            Assert.Equal(expected, actual.ToString());
+            var content = Assert.IsType<StringCollectionHtmlContent>(actual);
+            Assert.Equal(expected, GetContent(content));
         }
 
         [Fact]
@@ -165,7 +169,8 @@ namespace Microsoft.AspNet.Mvc.Rendering
             var actual = helper.Partial("some-partial", model);
 
             // Assert
-            Assert.Equal(expected, actual.ToString());
+            var content = Assert.IsType<StringCollectionHtmlContent>(actual);
+            Assert.Equal(expected, GetContent(content));
         }
 
         [Fact]
@@ -181,7 +186,17 @@ namespace Microsoft.AspNet.Mvc.Rendering
             var actual = helper.Partial("some-partial", viewData);
 
             // Assert
-            Assert.Equal(expected, actual.ToString());
+            var content = Assert.IsType<StringCollectionHtmlContent>(actual);
+            Assert.Equal(expected, GetContent(content));
+        }
+
+        private string GetContent(StringCollectionHtmlContent content)
+        {
+            using (var writer = new StringWriter())
+            {
+                content.WriteTo(writer, new HtmlEncoder());
+                return writer.ToString();
+            }
         }
 
         private sealed class TestModel

@@ -11,6 +11,7 @@ using Microsoft.AspNet.Mvc.ModelBinding;
 using Microsoft.AspNet.Mvc.Rendering;
 using Microsoft.AspNet.Razor.Runtime.TagHelpers;
 using Microsoft.AspNet.Routing;
+using Microsoft.Framework.OptionsModel;
 using Microsoft.Framework.WebEncoders.Testing;
 using Moq;
 using Xunit;

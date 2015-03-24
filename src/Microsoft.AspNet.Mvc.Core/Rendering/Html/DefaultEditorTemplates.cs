@@ -6,6 +6,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Globalization;
 using System.Text;
+using Microsoft.AspNet.HtmlContent;
 using Microsoft.AspNet.Mvc.Core;
 using Microsoft.AspNet.Mvc.ModelBinding;
 using Microsoft.AspNet.Mvc.Rendering.Internal;
@@ -18,7 +19,7 @@ namespace Microsoft.AspNet.Mvc.Rendering
     {
         private const string HtmlAttributeKey = "htmlAttributes";
 
-        public static string BooleanTemplate(IHtmlHelper htmlHelper)
+        public static IHtmlContent BooleanTemplate(IHtmlHelper htmlHelper)
         {
             bool? value = null;
             if (htmlHelper.ViewData.Model != null)
@@ -40,23 +41,22 @@ namespace Microsoft.AspNet.Mvc.Rendering
                     .ToString();
         }
 
-        private static string BooleanTemplateDropDownList(IHtmlHelper htmlHelper, bool? value)
+        private static IHtmlContent BooleanTemplateDropDownList(IHtmlHelper htmlHelper, bool? value)
         {
             return htmlHelper.DropDownList(
                 expression: null,
                 selectList: DefaultDisplayTemplates.TriStateValues(value),
                 optionLabel: null,
-                htmlAttributes: CreateHtmlAttributes(htmlHelper, "list-box tri-state"))
-                    .ToString();
+                htmlAttributes: CreateHtmlAttributes(htmlHelper, "list-box tri-state"));
         }
 
-        public static string CollectionTemplate(IHtmlHelper htmlHelper)
+        public static IHtmlContent CollectionTemplate(IHtmlHelper htmlHelper)
         {
             var viewData = htmlHelper.ViewData;
             var model = viewData.Model;
             if (model == null)
             {
-                return string.Empty;
+                return StringHtmlContent.Empty;
             }
 
             var collection = model as IEnumerable;
@@ -133,7 +133,7 @@ namespace Microsoft.AspNet.Mvc.Rendering
             return StringTemplate(htmlHelper);
         }
 
-        public static string HiddenInputTemplate(IHtmlHelper htmlHelper)
+        public static IHtmlContent HiddenInputTemplate(IHtmlHelper htmlHelper)
         {
             var viewData = htmlHelper.ViewData;
             var model = viewData.Model;
@@ -229,7 +229,6 @@ namespace Microsoft.AspNet.Mvc.Rendering
             var viewData = htmlHelper.ViewData;
             var templateInfo = viewData.TemplateInfo;
             var modelExplorer = viewData.ModelExplorer;
-            var builder = new StringBuilder();
 
             if (templateInfo.TemplateDepth > 1)
             {
@@ -250,6 +249,7 @@ namespace Microsoft.AspNet.Mvc.Rendering
             var serviceProvider = htmlHelper.ViewContext.HttpContext.RequestServices;
             var viewEngine = serviceProvider.GetRequiredService<ICompositeViewEngine>();
 
+            var content = new BufferedHtmlContent();
             foreach (var propertyExplorer in modelExplorer.Properties)
             {
                 var propertyMetadata = propertyExplorer.Metadata;
@@ -258,8 +258,7 @@ namespace Microsoft.AspNet.Mvc.Rendering
                     continue;
                 }
 
-                var divTag = new TagBuilder("div", htmlHelper.HtmlEncoder);
-
+                TagBuilder containerDivTag = null;
                 if (!propertyMetadata.HideSurroundingHtml)
                 {
                     var label = htmlHelper.Label(
@@ -269,16 +268,15 @@ namespace Microsoft.AspNet.Mvc.Rendering
                             .ToString();
                     if (!string.IsNullOrEmpty(label))
                     {
-                        divTag.AddCssClass("editor-label");
-                        divTag.InnerHtml = label; // already escaped
-                        builder.AppendLine(divTag.ToString(TagRenderMode.Normal));
-
-                        // Reset divTag for reuse.
-                        divTag.Attributes.Clear();
+                        var labelDivTag = new TagBuilder("div");
+                        labelDivTag.AddCssClass("editor-label");
+                        labelDivTag.SetInnerText(label); // already escaped
+                        content.Append(labelDivTag);
+                        content.Append(StringHtmlContent.FromEncodedText(Environment.NewLine));
                     }
 
-                    divTag.AddCssClass("editor-field");
-                    builder.Append(divTag.ToString(TagRenderMode.StartTag));
+                    containerDivTag = new TagBuilder("div");
+                    containerDivTag.AddCssClass("editor-field");
                 }
 
                 var templateBuilder = new TemplateBuilder(
@@ -291,22 +289,28 @@ namespace Microsoft.AspNet.Mvc.Rendering
                     readOnly: false,
                     additionalViewData: null);
 
-                builder.Append(templateBuilder.Build());
-
                 if (!propertyMetadata.HideSurroundingHtml)
                 {
-                    builder.Append(" ");
-                    builder.Append(htmlHelper.ValidationMessage(
+                    var innerContent = new BufferedHtmlContent();
+                    innerContent.Append(StringHtmlContent.FromEncodedText(templateBuilder.Build()));
+                    innerContent.Append(" ");
+                    innerContent.Append(htmlHelper.ValidationMessage(
                         propertyMetadata.PropertyName,
                         message: null,
                         htmlAttributes: null,
                         tag: null));
 
-                    builder.AppendLine(divTag.ToString(TagRenderMode.EndTag));
+                    containerDivTag.InnerHtml = innerContent;
+                    content.Append(containerDivTag);
+                    content.Append(StringHtmlContent.FromEncodedText(Environment.NewLine));
+                }
+                else
+                {
+                    content.Append(StringHtmlContent.FromEncodedText(templateBuilder.Build()));
                 }
             }
 
-            return builder.ToString();
+            return content.ToString();
         }
 
         public static string PasswordTemplate(IHtmlHelper htmlHelper)

@@ -6,23 +6,16 @@ using System.Collections.Generic;
 using System.Globalization;
 using System.IO;
 using System.Text;
+using Microsoft.AspNet.HtmlContent;
 using Microsoft.AspNet.Mvc.Core;
 using Microsoft.Framework.Internal;
 using Microsoft.Framework.WebEncoders;
 
 namespace Microsoft.AspNet.Mvc.Rendering
 {
-    public class TagBuilder
+    public class TagBuilder : IHtmlContent
     {
-        private string _innerHtml;
-        private readonly IHtmlEncoder _htmlEncoder;
-
         public TagBuilder(string tagName)
-            : this(tagName, HtmlEncoder.Default)
-        {
-        }
-
-        public TagBuilder(string tagName, [NotNull] IHtmlEncoder htmlEncoder)
         {
             if (string.IsNullOrEmpty(tagName))
             {
@@ -31,18 +24,15 @@ namespace Microsoft.AspNet.Mvc.Rendering
 
             TagName = tagName;
             Attributes = new SortedDictionary<string, string>(StringComparer.OrdinalIgnoreCase);
-            _htmlEncoder = htmlEncoder;
         }
 
-        public IDictionary<string, string> Attributes { get; private set; }
+        public IDictionary<string, string> Attributes { get; }
 
-        public string InnerHtml
-        {
-            get { return _innerHtml ?? string.Empty; }
-            set { _innerHtml = value; }
-        }
+        public IHtmlContent InnerHtml { get; set; }
 
-        public string TagName { get; private set; }
+        public string TagName { get; }
+
+        public bool IsSelfClosing { get; set; }
 
         public void AddCssClass(string value)
         {
@@ -114,7 +104,7 @@ namespace Microsoft.AspNet.Mvc.Rendering
             }
         }
 
-        private void AppendAttributes(TextWriter textWriter)
+        private void AppendAttributes(TextWriter writer, IHtmlEncoder encoder)
         {
             foreach (var attribute in Attributes)
             {
@@ -125,11 +115,11 @@ namespace Microsoft.AspNet.Mvc.Rendering
                     continue;
                 }
 
-                textWriter.Write(' ');
-                textWriter.Write(key);
-                textWriter.Write("=\"");
-                _htmlEncoder.HtmlEncode(attribute.Value, textWriter);
-                textWriter.Write('"');
+                writer.Write(' ');
+                writer.Write(key);
+                writer.Write("=\"");
+                encoder.HtmlEncode(attribute.Value, writer);
+                writer.Write('"');
             }
         }
 
@@ -171,7 +161,7 @@ namespace Microsoft.AspNet.Mvc.Rendering
 
         public void SetInnerText(string innerText)
         {
-            InnerHtml = _htmlEncoder.HtmlEncode(innerText);
+            InnerHtml = StringHtmlContent.FromEncodedText(innerText);
         }
 
         public HtmlString ToHtmlString(TagRenderMode renderMode)
@@ -188,38 +178,51 @@ namespace Microsoft.AspNet.Mvc.Rendering
         {
             using (var stringWriter = new StringWriter())
             {
-                switch (renderMode)
-                {
-                    case TagRenderMode.StartTag:
-                        stringWriter.Write('<');
-                        stringWriter.Write(TagName);
-                        AppendAttributes(stringWriter);
-                        stringWriter.Write('>');
-                        break;
-                    case TagRenderMode.EndTag:
-                        stringWriter.Write("</");
-                        stringWriter.Write(TagName);
-                        stringWriter.Write('>');
-                        break;
-                    case TagRenderMode.SelfClosing:
-                        stringWriter.Write('<');
-                        stringWriter.Write(TagName);
-                        AppendAttributes(stringWriter);
-                        stringWriter.Write(" />");
-                        break;
-                    default:
-                        stringWriter.Write('<');
-                        stringWriter.Write(TagName);
-                        AppendAttributes(stringWriter);
-                        stringWriter.Write('>');
-                        stringWriter.Write(InnerHtml);
-                        stringWriter.Write("</");
-                        stringWriter.Write(TagName);
-                        stringWriter.Write('>');
-                        break;
-                }
-
+                WriteTo(stringWriter, new HtmlEncoder(), renderMode);
                 return stringWriter.ToString();
+            }
+        }
+
+        public void WriteTo(TextWriter writer, IHtmlEncoder encoder)
+        {
+            var renderMode = IsSelfClosing ? TagRenderMode.SelfClosing : TagRenderMode.Normal;
+            WriteTo(writer, encoder, renderMode);
+        }
+
+        public void WriteTo(TextWriter writer, IHtmlEncoder encoder, TagRenderMode renderMode)
+        {
+            switch (renderMode)
+            {
+                case TagRenderMode.StartTag:
+                    writer.Write('<');
+                    writer.Write(TagName);
+                    AppendAttributes(writer, encoder);
+                    writer.Write('>');
+                    break;
+                case TagRenderMode.EndTag:
+                    writer.Write("</");
+                    writer.Write(TagName);
+                    writer.Write('>');
+                    break;
+                case TagRenderMode.SelfClosing:
+                    writer.Write('<');
+                    writer.Write(TagName);
+                    AppendAttributes(writer, encoder);
+                    writer.Write(" />");
+                    break;
+                default:
+                    writer.Write('<');
+                    writer.Write(TagName);
+                    AppendAttributes(writer, encoder);
+                    writer.Write('>');
+                    if (InnerHtml != null)
+                    {
+                        InnerHtml.WriteTo(writer, encoder);
+                    }
+                    writer.Write("</");
+                    writer.Write(TagName);
+                    writer.Write('>');
+                    break;
             }
         }
 

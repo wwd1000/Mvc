@@ -161,10 +161,8 @@ namespace Microsoft.AspNet.Mvc.TagHelpers
                     tagHelperContent.SetContent(childContent);
                     return Task.FromResult<TagHelperContent>(tagHelperContent);
                 });
-            var tagBuilder = new TagBuilder("span2", new CommonTestEncoder())
-            {
-                InnerHtml = "New HTML"
-            };
+            var tagBuilder = new TagBuilder("span2", new CommonTestEncoder());
+            tagBuilder.SetInnerText("New HTML");
             tagBuilder.Attributes.Add("data-foo", "bar");
             tagBuilder.Attributes.Add("data-hello", "world");
 
@@ -220,10 +218,8 @@ namespace Microsoft.AspNet.Mvc.TagHelpers
                     tagHelperContent.SetContent(childContent);
                     return Task.FromResult<TagHelperContent>(tagHelperContent);
                 });
-            var tagBuilder = new TagBuilder("span2", new CommonTestEncoder())
-            {
-                InnerHtml = "New HTML"
-            };
+            var tagBuilder = new TagBuilder("span2", new CommonTestEncoder());
+            tagBuilder.SetInnerText("New HTML");
             tagBuilder.Attributes.Add("data-foo", "bar");
             tagBuilder.Attributes.Add("data-hello", "world");
 

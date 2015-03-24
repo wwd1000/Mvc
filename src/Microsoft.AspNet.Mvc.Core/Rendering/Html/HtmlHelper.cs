@@ -7,6 +7,7 @@ using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Microsoft.AspNet.HtmlContent;
 using Microsoft.AspNet.Mvc.Core;
 using Microsoft.AspNet.Mvc.ModelBinding;
 using Microsoft.AspNet.Mvc.ModelBinding.Validation;
@@ -429,7 +430,7 @@ namespace Microsoft.AspNet.Mvc.Rendering
         }
 
         /// <inheritdoc />
-        public async Task<HtmlString> PartialAsync(
+        public async Task<IHtmlContent> PartialAsync(
             [NotNull] string partialViewName,
             object model,
             ViewDataDictionary viewData)
@@ -438,7 +439,7 @@ namespace Microsoft.AspNet.Mvc.Rendering
             {
                 await RenderPartialCoreAsync(partialViewName, model, viewData, writer);
 
-                return new HtmlString(writer);
+                return writer.Content;
             }
         }
 

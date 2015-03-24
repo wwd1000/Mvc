@@ -9,6 +9,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Microsoft.AspNet.Http;
+using Microsoft.AspNet.HtmlContent;
 using Microsoft.AspNet.Mvc.ModelBinding;
 using Microsoft.AspNet.Mvc.ModelBinding.Validation;
 using Microsoft.AspNet.Mvc.Rendering;
@@ -1066,7 +1067,7 @@ Environment.NewLine;
                 throw new NotImplementedException();
             }
 
-            public Task<HtmlString> PartialAsync(
+            public Task<IHtmlContent> PartialAsync(
                 [NotNull] string partialViewName,
                 object model,
                 ViewDataDictionary viewData)

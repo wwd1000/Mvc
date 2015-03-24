@@ -118,7 +118,7 @@ namespace Microsoft.AspNet.Mvc.TagHelpers
                     null,   // message
                     null,   // headerTag
                     null))  // htmlAttributes
-                .Returns(new TagBuilder("div", new HtmlEncoder()))
+                .Returns(new TagBuilder("div"))
                 .Verifiable();
             validationSummaryTagHelper.ViewContext = expectedViewContext;
             validationSummaryTagHelper.Generator = generator.Object;
@@ -151,11 +151,8 @@ namespace Microsoft.AspNet.Mvc.TagHelpers
             output.Content.SetContent(expectedContent);
             output.PostContent.SetContent("Content of validation summary");
 
-            var tagBuilder = new TagBuilder("span2", new HtmlEncoder())
-            {
-                InnerHtml = "New HTML"
-            };
-
+            var tagBuilder = new TagBuilder("span2");
+            tagBuilder.SetInnerText("New HTML");
             tagBuilder.Attributes.Add("data-foo", "bar");
             tagBuilder.Attributes.Add("data-hello", "world");
             tagBuilder.Attributes.Add("anything", "something");
@@ -242,10 +239,8 @@ namespace Microsoft.AspNet.Mvc.TagHelpers
             output.PreContent.SetContent(expectedPreContent);
             output.Content.SetContent(expectedContent);
             output.PostContent.SetContent("Content of validation message");
-            var tagBuilder = new TagBuilder("span2", new HtmlEncoder())
-            {
-                InnerHtml = "New HTML"
-            };
+            var tagBuilder = new TagBuilder("span2");
+            tagBuilder.SetInnerText("New HTML");
 
             var generator = new Mock<IHtmlGenerator>();
             generator

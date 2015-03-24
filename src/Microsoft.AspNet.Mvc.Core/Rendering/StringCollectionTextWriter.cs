@@ -5,6 +5,7 @@ using System;
 using System.IO;
 using System.Text;
 using System.Threading.Tasks;
+using Microsoft.AspNet.HtmlContent;
 using Microsoft.Framework.Internal;
 
 namespace Microsoft.AspNet.Mvc.Rendering
@@ -28,8 +29,13 @@ namespace Microsoft.AspNet.Mvc.Rendering
         public StringCollectionTextWriter(Encoding encoding)
         {
             _encoding = encoding;
-            Buffer = new BufferEntryCollection();
+
+            var content = new StringCollectionHtmlContent();
+            Content = content;
+            Buffer = content.Buffer;
         }
+
+        public IHtmlContent Content { get; }
 
         /// <inheritdoc />
         public override Encoding Encoding
@@ -135,58 +141,6 @@ namespace Microsoft.AspNet.Mvc.Rendering
         {
             WriteLine();
             return _completedTask;
-        }
-
-        /// <inheritdoc />
-        public void CopyTo(TextWriter writer)
-        {
-            var targetStringCollectionWriter = writer as StringCollectionTextWriter;
-            if (targetStringCollectionWriter != null)
-            {
-                targetStringCollectionWriter.Buffer.Add(Buffer);
-            }
-            else
-            {
-                WriteList(writer, Buffer);
-            }
-        }
-
-        /// <inheritdoc />
-        public Task CopyToAsync(TextWriter writer)
-        {
-            var targetStringCollectionWriter = writer as StringCollectionTextWriter;
-            if (targetStringCollectionWriter != null)
-            {
-                targetStringCollectionWriter.Buffer.Add(Buffer);
-            }
-            else
-            {
-                return WriteListAsync(writer, Buffer);
-            }
-
-            return _completedTask;
-        }
-
-        /// <inheritdoc />
-        public override string ToString()
-        {
-            return string.Join(string.Empty, Buffer);
-        }
-
-        private static void WriteList(TextWriter writer, BufferEntryCollection values)
-        {
-            foreach (var value in values)
-            {
-                writer.Write(value);
-            }
-        }
-
-        private static async Task WriteListAsync(TextWriter writer, BufferEntryCollection values)
-        {
-            foreach (var value in values)
-            {
-                await writer.WriteAsync(value);
-            }
         }
     }
 }

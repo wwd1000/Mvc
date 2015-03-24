@@ -123,7 +123,7 @@ namespace Microsoft.AspNet.Mvc.Rendering
             // Act
             source.Write("Hello world");
             source.Write(new char[1], 0, 1);
-            source.CopyTo(target);
+            source.Content.WriteTo(target, null);
 
             // Assert
             // Make sure content was written to the source.
@@ -143,7 +143,7 @@ namespace Microsoft.AspNet.Mvc.Rendering
             // Act
             source.WriteLine("Hello world");
             source.Write(new[] { 'x', 'a', 'b', 'c' }, 1, 3);
-            source.CopyTo(target);
+            source.Content.WriteTo(target, null);
 
             // Assert
             Assert.Equal(expected, target.ToString());

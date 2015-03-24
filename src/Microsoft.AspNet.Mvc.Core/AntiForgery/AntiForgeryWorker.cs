@@ -111,7 +111,7 @@ namespace Microsoft.AspNet.Mvc
             SaveCookieTokenAndHeader(httpContext, cookieToken);
 
             // <input type="hidden" name="__AntiForgeryToken" value="..." />
-            var inputTag = new TagBuilder("input", _htmlEncoder)
+            var inputTag = new TagBuilder("input")
             {
                 Attributes =
                 {
