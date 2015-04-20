@@ -1312,6 +1312,14 @@ namespace Microsoft.AspNet.Mvc
                 modelExplorer: modelExplorer);
 
             ObjectValidator.Validate(validationContext);
+            /*
+            var validationNode = new ModelValidationNode(modelMetadata, modelName)
+            {
+                ValidateAllProperties = true
+            };
+            validationNode.Validate(validationContext);
+            */
+
             return ModelState.IsValid;
         }
 

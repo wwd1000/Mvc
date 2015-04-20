@@ -34,7 +34,8 @@ namespace Microsoft.AspNet.Mvc.ModelBinding
 
         public virtual async Task<ModelBindingResult> BindModelAsync([NotNull] ModelBindingContext bindingContext)
         {
-            var newBindingContext = CreateNewBindingContext(bindingContext, bindingContext.ModelName);
+            var newBindingContext =
+                CreateNewBindingContext(bindingContext, bindingContext.ModelName, reuseValidationNode: true);
             var modelBindingResult = await TryBind(newBindingContext);
 
             if (modelBindingResult == null &&
@@ -42,8 +43,8 @@ namespace Microsoft.AspNet.Mvc.ModelBinding
                 !string.IsNullOrEmpty(bindingContext.ModelName))
             {
                 // Fall back to empty prefix.
-                newBindingContext = CreateNewBindingContext(bindingContext,
-                                                            modelName: string.Empty);
+                newBindingContext =
+                    CreateNewBindingContext(bindingContext, modelName: string.Empty, reuseValidationNode: false);
                 modelBindingResult = await TryBind(newBindingContext);
             }
 
@@ -120,8 +121,10 @@ namespace Microsoft.AspNet.Mvc.ModelBinding
             return null;
         }
 
-        private static ModelBindingContext CreateNewBindingContext(ModelBindingContext oldBindingContext,
-                                                                   string modelName)
+        private static ModelBindingContext CreateNewBindingContext(
+            ModelBindingContext oldBindingContext,
+            string modelName,
+            bool reuseValidationNode)
         {
             var newBindingContext = new ModelBindingContext
             {
@@ -136,6 +139,12 @@ namespace Microsoft.AspNet.Mvc.ModelBinding
                 BindingSource = oldBindingContext.BindingSource,
                 BinderType = oldBindingContext.BinderType,
             };
+
+            // validation is expensive to create, so copy it over if we can
+            if (reuseValidationNode)
+            {
+                newBindingContext.ValidationNode = oldBindingContext.ValidationNode;
+            }
 
             newBindingContext.OperationBindingContext.BodyBindingState = GetBodyBindingState(oldBindingContext);
 

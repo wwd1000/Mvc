@@ -46,6 +46,9 @@ namespace Microsoft.AspNet.Mvc.ModelBinding
 
             // post-processing, e.g. property setters and hooking up validation
             ProcessDto(bindingContext, (ComplexModelDto)result.Model);
+            // complex models require full validation
+            bindingContext.ValidationNode.ValidateAllProperties = true;
+
             return new ModelBindingResult(
                 bindingContext.Model,
                 bindingContext.ModelName,
@@ -430,6 +433,9 @@ namespace Microsoft.AspNet.Mvc.ModelBinding
                         out requiredValidator);
 
                     SetProperty(bindingContext, modelExplorer, propertyMetadata, dtoResult, requiredValidator);
+                    /*
+                    bindingContext.ValidationNode.ChildNodes.Add(dtoResult.ValidationNode);
+                    */
                 }
             }
         }

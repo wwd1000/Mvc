@@ -37,7 +37,7 @@ namespace Microsoft.AspNet.Mvc.ModelBinding.Validation
         /// <paramref name="parentContext" /> and <paramref name="modelExplorer"/>.
         /// </summary>
         /// <param name="parentContext">Existing <see cref="ModelValidationContext"/>.</param>
-        /// <param name="modelExplorer"><see cref="ModelExplorer"/> associated with the new 
+        /// <param name="modelExplorer"><see cref="ModelExplorer"/> associated with the new
         /// <see cref="ModelValidationContext"/>.</param>
         /// <returns></returns>
         public static ModelValidationContext GetChildValidationContext(
@@ -57,6 +57,8 @@ namespace Microsoft.AspNet.Mvc.ModelBinding.Validation
         public ModelStateDictionary ModelState { get; }
 
         public string RootPrefix { get; set; }
+
+        public ModelValidationNode RootValidationNode { get; }
 
         public BindingSource BindingSource { get; set; }
 

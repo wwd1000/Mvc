@@ -55,6 +55,7 @@ namespace Microsoft.AspNet.Mvc.ModelBinding.Test
             Assert.False(bindingContext.ModelState.IsValid);
             Assert.Equal("someName", bindingContext.ModelName);
             Assert.Equal(bindingContext.ModelState["someName.Value"].Errors.First().ErrorMessage, "A value is required.");
+            Assert.Empty(bindingContext.ValidationNode.ChildNodes);
         }
 
         [Fact]
@@ -79,6 +80,7 @@ namespace Microsoft.AspNet.Mvc.ModelBinding.Test
             Assert.Null(result);
             Assert.True(bindingContext.ModelState.IsValid);
             Assert.Equal(0, bindingContext.ModelState.ErrorCount);
+            Assert.Equal(new[] { "someName.key" }, bindingContext.ValidationNode.ChildNodes.Select(n => n.ModelStateKey).ToArray());
         }
 
         [Fact]
@@ -97,6 +99,7 @@ namespace Microsoft.AspNet.Mvc.ModelBinding.Test
             // Assert
             Assert.NotNull(result);
             Assert.Equal(new KeyValuePair<int, string>(42, "some-value"), result.Model);
+            Assert.Equal(new[] { "someName.key", "someName.value" }, bindingContext.ValidationNode.ChildNodes.Select(n => n.ModelStateKey).ToArray());
         }
 
         [Fact]
@@ -112,6 +115,7 @@ namespace Microsoft.AspNet.Mvc.ModelBinding.Test
             // Assert
             Assert.True(result.IsModelSet);
             Assert.Equal(42, result.Model);
+            Assert.Single(bindingContext.ValidationNode.ChildNodes);
             Assert.Empty(bindingContext.ModelState);
         }
 
@@ -138,6 +142,7 @@ namespace Microsoft.AspNet.Mvc.ModelBinding.Test
             // Assert
             Assert.True(result.IsModelSet);
             Assert.Null(result.Model);
+            Assert.Single(bindingContext.ValidationNode.ChildNodes);
             Assert.Empty(bindingContext.ModelState);
         }
 

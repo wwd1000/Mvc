@@ -94,6 +94,7 @@ namespace Microsoft.AspNet.Mvc.ModelBinding
                 if (result != null)
                 {
                     boundValue = result.Model;
+                    bindingContext.ValidationNode.ChildNodes.Add(innerBindingContext.ValidationNode);
                 }
                 boundCollection.Add(ModelBindingHelper.CastOrDefault<TElement>(boundValue));
             }
@@ -150,6 +151,9 @@ namespace Microsoft.AspNet.Mvc.ModelBinding
                 {
                     didBind = true;
                     boundValue = result.Model;
+
+                    // merge validation up
+                    bindingContext.ValidationNode.ChildNodes.Add(childBindingContext.ValidationNode);
                 }
 
                 // infinite size collection stops on first bind failure

@@ -60,6 +60,25 @@ namespace Microsoft.AspNet.Mvc.ModelBinding.Test
             Assert.Equal(typeof(int), bindingContext.ModelType);
         }
 
+        [Fact]
+        public void ValidationNodeProperty_DefaultValues()
+        {
+            // Act
+            var bindingContext = new ModelBindingContext
+            {
+                ModelMetadata = new EmptyModelMetadataProvider().GetMetadataForType(typeof(int)),
+                ModelName = "theInt"
+            };
+
+            // Act
+            var validationNode = bindingContext.ValidationNode;
+
+            // Assert
+            Assert.NotNull(validationNode);
+            Assert.Equal(bindingContext.ModelMetadata, validationNode.ModelMetadata);
+            Assert.Equal(bindingContext.ModelName, validationNode.ModelStateKey);
+        }
+
         private class TestModelBinder : IModelBinder
         {
             public Task<ModelBindingResult> BindModelAsync(ModelBindingContext bindingContext)

@@ -17,6 +17,7 @@ namespace Microsoft.AspNet.Mvc.ModelBinding
 
         private string _modelName;
         private ModelStateDictionary _modelState;
+        private ModelValidationNode _validationNode;
         private Func<ModelBindingContext, string, bool> _propertyFilter;
 
         /// <summary>
@@ -66,7 +67,7 @@ namespace Microsoft.AspNet.Mvc.ModelBinding
             string modelName)
         {
             var binderModelName = bindingInfo?.BinderModelName ?? metadata.BinderModelName;
-            var propertyPredicateProvider = 
+            var propertyPredicateProvider =
                 bindingInfo?.PropertyBindingPredicateProvider ?? metadata.PropertyBindingPredicateProvider;
             return new ModelBindingContext()
             {
@@ -149,19 +150,19 @@ namespace Microsoft.AspNet.Mvc.ModelBinding
         }
 
         /// <summary>
-        /// Gets or sets a model name which is explicitly set using an <see cref="IModelNameProvider"/>. 
+        /// Gets or sets a model name which is explicitly set using an <see cref="IModelNameProvider"/>.
         /// <see cref="Model"/>.
         /// </summary>
         public string BinderModelName { get; set; }
 
         /// <summary>
-        /// Gets or sets a value which represents the <see cref="BindingSource"/> associated with the 
+        /// Gets or sets a value which represents the <see cref="BindingSource"/> associated with the
         /// <see cref="Model"/>.
         /// </summary>
         public BindingSource BindingSource { get; set; }
 
         /// <summary>
-        /// Gets the <see cref="Type"/> of an <see cref="IModelBinder"/> associated with the 
+        /// Gets the <see cref="Type"/> of an <see cref="IModelBinder"/> associated with the
         /// <see cref="Model"/>.
         /// </summary>
         public Type BinderType { get; set; }

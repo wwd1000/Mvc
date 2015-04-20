@@ -72,6 +72,7 @@ namespace Microsoft.AspNet.Mvc.ModelBinding
                 propertyBindingContext);
             if (modelBindingResult != null)
             {
+                parentBindingContext.ValidationNode.ChildNodes.Add(propertyBindingContext.ValidationNode);
                 return modelBindingResult;
             }
 
