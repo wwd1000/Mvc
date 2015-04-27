@@ -121,10 +121,10 @@ namespace Microsoft.AspNet.Mvc.TagHelpers
                     It.IsAny<object>(),
                     It.IsAny<string>(),
                     It.IsAny<object>()))
-                .Returns(new TagBuilder("form", new CommonTestEncoder()));
+                .Returns(new TagBuilder("form"));
 
             generator.Setup(mock => mock.GenerateAntiForgery(viewContext))
-                     .Returns(new TagBuilder("input", new CommonTestEncoder()));
+                     .Returns(new TagBuilder("input"));
             var formTagHelper = new FormTagHelper
             {
                 Action = "Index",
@@ -194,7 +194,7 @@ namespace Microsoft.AspNet.Mvc.TagHelpers
                         routeValue = Assert.Single(routeValueDictionary, attr => attr.Key.Equals("-Foo"));
                         Assert.Equal("bar", routeValue.Value);
                     })
-                .Returns(new TagBuilder("form", new CommonTestEncoder()))
+                .Returns(new TagBuilder("form"))
                 .Verifiable();
             var formTagHelper = new FormTagHelper
             {
@@ -239,7 +239,7 @@ namespace Microsoft.AspNet.Mvc.TagHelpers
             var generator = new Mock<IHtmlGenerator>(MockBehavior.Strict);
             generator
                 .Setup(mock => mock.GenerateForm(viewContext, "Index", "Home", null, null, null))
-                .Returns(new TagBuilder("form", new CommonTestEncoder()))
+                .Returns(new TagBuilder("form"))
                 .Verifiable();
             var formTagHelper = new FormTagHelper
             {
@@ -293,7 +293,7 @@ namespace Microsoft.AspNet.Mvc.TagHelpers
                     It.Is<Dictionary<string, object>>(m => string.Equals(m["foo"], "bar")),
                     null,
                     null))
-                .Returns(new TagBuilder("form", new CommonTestEncoder()))
+                .Returns(new TagBuilder("form"))
                 .Verifiable();
             var formTagHelper = new FormTagHelper
             {
@@ -330,7 +330,7 @@ namespace Microsoft.AspNet.Mvc.TagHelpers
             var generator = new Mock<IHtmlGenerator>();
 
             generator.Setup(mock => mock.GenerateAntiForgery(It.IsAny<ViewContext>()))
-                     .Returns(new TagBuilder("input", new CommonTestEncoder()));
+                     .Returns(new TagBuilder("input"));
             var formTagHelper = new FormTagHelper
             {
                 AntiForgery = antiForgery,

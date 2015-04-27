@@ -32,13 +32,12 @@ namespace Microsoft.AspNet.Mvc.Rendering
                 BooleanTemplateCheckbox(htmlHelper, value ?? false);
         }
 
-        private static string BooleanTemplateCheckbox(IHtmlHelper htmlHelper, bool value)
+        private static IHtmlContent BooleanTemplateCheckbox(IHtmlHelper htmlHelper, bool value)
         {
             return htmlHelper.CheckBox(
                 expression: null,
                 isChecked: value,
-                htmlAttributes: CreateHtmlAttributes(htmlHelper, "check-box"))
-                    .ToString();
+                htmlAttributes: CreateHtmlAttributes(htmlHelper, "check-box"));
         }
 
         private static IHtmlContent BooleanTemplateDropDownList(IHtmlHelper htmlHelper, bool? value)
@@ -82,7 +81,7 @@ namespace Microsoft.AspNet.Mvc.Rendering
                 viewData.TemplateInfo.HtmlFieldPrefix = string.Empty;
 
                 var fieldNameBase = oldPrefix;
-                var result = new StringBuilder();
+                var result = new BufferedHtmlContent();
 
                 var serviceProvider = htmlHelper.ViewContext.HttpContext.RequestServices;
                 var metadataProvider = serviceProvider.GetRequiredService<IModelMetadataProvider>();
@@ -114,7 +113,7 @@ namespace Microsoft.AspNet.Mvc.Rendering
                     result.Append(output);
                 }
 
-                return result.ToString();
+                return result;
             }
             finally
             {
@@ -122,7 +121,7 @@ namespace Microsoft.AspNet.Mvc.Rendering
             }
         }
 
-        public static string DecimalTemplate(IHtmlHelper htmlHelper)
+        public static IHtmlContent DecimalTemplate(IHtmlHelper htmlHelper)
         {
             if (htmlHelper.ViewData.TemplateInfo.FormattedModelValue == htmlHelper.ViewData.Model)
             {
@@ -138,14 +137,10 @@ namespace Microsoft.AspNet.Mvc.Rendering
             var viewData = htmlHelper.ViewData;
             var model = viewData.Model;
 
-            string result;
-            if (viewData.ModelMetadata.HideSurroundingHtml)
+            var result = new BufferedHtmlContent();
+            if (!viewData.ModelMetadata.HideSurroundingHtml)
             {
-                result = string.Empty;
-            }
-            else
-            {
-                result = DefaultDisplayTemplates.StringTemplate(htmlHelper);
+                result.Append(DefaultDisplayTemplates.StringTemplate(htmlHelper));
             }
 
             // Special-case opaque values and arbitrary binary data.
@@ -157,7 +152,7 @@ namespace Microsoft.AspNet.Mvc.Rendering
 
             var htmlAttributesObject = viewData[HtmlAttributeKey];
             var hiddenResult = htmlHelper.Hidden(expression: null, value: model, htmlAttributes: htmlAttributesObject);
-            result += hiddenResult.ToString();
+            result.Append(hiddenResult);
 
             return result;
         }
@@ -213,18 +208,17 @@ namespace Microsoft.AspNet.Mvc.Rendering
             return htmlAttributes;
         }
 
-        public static string MultilineTemplate(IHtmlHelper htmlHelper)
+        public static IHtmlContent MultilineTemplate(IHtmlHelper htmlHelper)
         {
-            var htmlString = htmlHelper.TextArea(
+            return htmlHelper.TextArea(
                 expression: string.Empty,
                 value: htmlHelper.ViewContext.ViewData.TemplateInfo.FormattedModelValue.ToString(),
                 rows: 0,
                 columns: 0,
                 htmlAttributes: CreateHtmlAttributes(htmlHelper, "text-box multi-line"));
-            return htmlString.ToString();
         }
 
-        public static string ObjectTemplate(IHtmlHelper htmlHelper)
+        public static IHtmlContent ObjectTemplate(IHtmlHelper htmlHelper)
         {
             var viewData = htmlHelper.ViewData;
             var templateInfo = viewData.TemplateInfo;
@@ -234,7 +228,7 @@ namespace Microsoft.AspNet.Mvc.Rendering
             {
                 if (modelExplorer.Model == null)
                 {
-                    return modelExplorer.Metadata.NullDisplayText;
+                    return new StringHtmlContent(modelExplorer.Metadata.NullDisplayText);
                 }
 
                 var text = modelExplorer.GetSimpleDisplayText();
@@ -243,7 +237,7 @@ namespace Microsoft.AspNet.Mvc.Rendering
                     text = htmlHelper.Encode(text);
                 }
 
-                return text;
+                return new StringHtmlContent(text);
             }
 
             var serviceProvider = htmlHelper.ViewContext.HttpContext.RequestServices;
@@ -264,15 +258,14 @@ namespace Microsoft.AspNet.Mvc.Rendering
                     var label = htmlHelper.Label(
                         propertyMetadata.PropertyName,
                         labelText: null,
-                        htmlAttributes: null)
-                            .ToString();
-                    if (!string.IsNullOrEmpty(label))
+                        htmlAttributes: null);
+                    if (!string.IsNullOrEmpty(label.ToString()))
                     {
                         var labelDivTag = new TagBuilder("div");
                         labelDivTag.AddCssClass("editor-label");
-                        labelDivTag.SetInnerText(label); // already escaped
+                        labelDivTag.InnerHtml = label;
                         content.Append(labelDivTag);
-                        content.Append(StringHtmlContent.FromEncodedText(Environment.NewLine));
+                        content.Append(Environment.NewLine);
                     }
 
                     containerDivTag = new TagBuilder("div");
@@ -292,7 +285,7 @@ namespace Microsoft.AspNet.Mvc.Rendering
                 if (!propertyMetadata.HideSurroundingHtml)
                 {
                     var innerContent = new BufferedHtmlContent();
-                    innerContent.Append(StringHtmlContent.FromEncodedText(templateBuilder.Build()));
+                    innerContent.Append(templateBuilder.Build());
                     innerContent.Append(" ");
                     innerContent.Append(htmlHelper.ValidationMessage(
                         propertyMetadata.PropertyName,
@@ -302,24 +295,23 @@ namespace Microsoft.AspNet.Mvc.Rendering
 
                     containerDivTag.InnerHtml = innerContent;
                     content.Append(containerDivTag);
-                    content.Append(StringHtmlContent.FromEncodedText(Environment.NewLine));
+                    content.Append(Environment.NewLine);
                 }
                 else
                 {
-                    content.Append(StringHtmlContent.FromEncodedText(templateBuilder.Build()));
+                    content.Append(templateBuilder.Build());
                 }
             }
 
-            return content.ToString();
+            return content;
         }
 
-        public static string PasswordTemplate(IHtmlHelper htmlHelper)
+        public static IHtmlContent PasswordTemplate(IHtmlHelper htmlHelper)
         {
             return htmlHelper.Password(
                 expression: null,
                 value: htmlHelper.ViewData.TemplateInfo.FormattedModelValue,
-                htmlAttributes: CreateHtmlAttributes(htmlHelper, "text-box single-line password"))
-                    .ToString();
+                htmlAttributes: CreateHtmlAttributes(htmlHelper, "text-box single-line password"));
         }
 
         private static bool ShouldShow(ModelExplorer modelExplorer, TemplateInfo templateInfo)
@@ -330,61 +322,61 @@ namespace Microsoft.AspNet.Mvc.Rendering
                 !templateInfo.Visited(modelExplorer);
         }
 
-        public static string StringTemplate(IHtmlHelper htmlHelper)
+        public static IHtmlContent StringTemplate(IHtmlHelper htmlHelper)
         {
             return GenerateTextBox(htmlHelper);
         }
 
-        public static string PhoneNumberInputTemplate(IHtmlHelper htmlHelper)
+        public static IHtmlContent PhoneNumberInputTemplate(IHtmlHelper htmlHelper)
         {
             return GenerateTextBox(htmlHelper, inputType: "tel");
         }
 
-        public static string UrlInputTemplate(IHtmlHelper htmlHelper)
+        public static IHtmlContent UrlInputTemplate(IHtmlHelper htmlHelper)
         {
             return GenerateTextBox(htmlHelper, inputType: "url");
         }
 
-        public static string EmailAddressInputTemplate(IHtmlHelper htmlHelper)
+        public static IHtmlContent EmailAddressInputTemplate(IHtmlHelper htmlHelper)
         {
             return GenerateTextBox(htmlHelper, inputType: "email");
         }
 
-        public static string DateTimeInputTemplate(IHtmlHelper htmlHelper)
+        public static IHtmlContent DateTimeInputTemplate(IHtmlHelper htmlHelper)
         {
             ApplyRfc3339DateFormattingIfNeeded(htmlHelper, "{0:yyyy-MM-ddTHH:mm:ss.fffK}");
             return GenerateTextBox(htmlHelper, inputType: "datetime");
         }
 
-        public static string DateTimeLocalInputTemplate(IHtmlHelper htmlHelper)
+        public static IHtmlContent DateTimeLocalInputTemplate(IHtmlHelper htmlHelper)
         {
             ApplyRfc3339DateFormattingIfNeeded(htmlHelper, "{0:yyyy-MM-ddTHH:mm:ss.fff}");
             return GenerateTextBox(htmlHelper, inputType: "datetime-local");
         }
 
-        public static string DateInputTemplate(IHtmlHelper htmlHelper)
+        public static IHtmlContent DateInputTemplate(IHtmlHelper htmlHelper)
         {
             ApplyRfc3339DateFormattingIfNeeded(htmlHelper, "{0:yyyy-MM-dd}");
             return GenerateTextBox(htmlHelper, inputType: "date");
         }
 
-        public static string TimeInputTemplate(IHtmlHelper htmlHelper)
+        public static IHtmlContent TimeInputTemplate(IHtmlHelper htmlHelper)
         {
             ApplyRfc3339DateFormattingIfNeeded(htmlHelper, "{0:HH:mm:ss.fff}");
             return GenerateTextBox(htmlHelper, inputType: "time");
         }
 
-        public static string NumberInputTemplate(IHtmlHelper htmlHelper)
+        public static IHtmlContent NumberInputTemplate(IHtmlHelper htmlHelper)
         {
             return GenerateTextBox(htmlHelper, inputType: "number");
         }
 
-        public static string FileInputTemplate([NotNull] IHtmlHelper htmlHelper)
+        public static IHtmlContent FileInputTemplate([NotNull] IHtmlHelper htmlHelper)
         {
             return GenerateTextBox(htmlHelper, inputType: "file");
         }
 
-        public static string FileCollectionInputTemplate([NotNull] IHtmlHelper htmlHelper)
+        public static IHtmlContent FileCollectionInputTemplate([NotNull] IHtmlHelper htmlHelper)
         {
             var htmlAttributes =
                 CreateHtmlAttributes(htmlHelper, className: "text-box single-line", inputType: "file");
@@ -414,12 +406,12 @@ namespace Microsoft.AspNet.Mvc.Rendering
             }
         }
 
-        private static string GenerateTextBox(IHtmlHelper htmlHelper, string inputType = null)
+        private static IHtmlContent GenerateTextBox(IHtmlHelper htmlHelper, string inputType = null)
         {
             return GenerateTextBox(htmlHelper, inputType, htmlHelper.ViewData.TemplateInfo.FormattedModelValue);
         }
 
-        private static string GenerateTextBox(IHtmlHelper htmlHelper, string inputType, object value)
+        private static IHtmlContent GenerateTextBox(IHtmlHelper htmlHelper, string inputType, object value)
         {
             var htmlAttributes =
                 CreateHtmlAttributes(htmlHelper, className: "text-box single-line", inputType: inputType);
@@ -427,14 +419,13 @@ namespace Microsoft.AspNet.Mvc.Rendering
             return GenerateTextBox(htmlHelper, value, htmlAttributes);
         }
 
-        private static string GenerateTextBox(IHtmlHelper htmlHelper, object value, object htmlAttributes)
+        private static IHtmlContent GenerateTextBox(IHtmlHelper htmlHelper, object value, object htmlAttributes)
         {
             return htmlHelper.TextBox(
                 current: null,
                 value: value,
                 format: null,
-                htmlAttributes: htmlAttributes)
-                    .ToString();
+                htmlAttributes: htmlAttributes);
         }
     }
 }

@@ -4,6 +4,7 @@
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
+using Microsoft.AspNet.HtmlContent;
 using Microsoft.AspNet.Mvc.ModelBinding;
 using Xunit;
 
@@ -150,7 +151,7 @@ namespace Microsoft.AspNet.Mvc.Rendering
                 tag: tag);
 
             // Assert
-            Assert.Equal(expected, result.ToString());
+            Assert.Equal(expected, DefaultTemplatesUtilities.HtmlContentToString(result));
         }
 
         [Theory]
@@ -173,7 +174,7 @@ namespace Microsoft.AspNet.Mvc.Rendering
                 tag: tag);
 
             // Assert
-            Assert.Equal(HtmlString.Empty, result);
+            Assert.Equal(StringHtmlContent.Empty.ToString(), DefaultTemplatesUtilities.HtmlContentToString(result));
         }
 
         [Theory]
@@ -197,7 +198,7 @@ namespace Microsoft.AspNet.Mvc.Rendering
                 tag: tag);
 
             // Assert
-            Assert.Equal(HtmlString.Empty, result);
+            Assert.Equal(StringHtmlContent.Empty.ToString(), DefaultTemplatesUtilities.HtmlContentToString(result));
         }
 
         [Theory]
@@ -222,7 +223,7 @@ namespace Microsoft.AspNet.Mvc.Rendering
                 tag: null);
 
             // Assert
-            Assert.Equal(expected, result.ToString());
+            Assert.Equal(expected, DefaultTemplatesUtilities.HtmlContentToString(result));
         }
 
         [Theory]
@@ -248,7 +249,7 @@ namespace Microsoft.AspNet.Mvc.Rendering
                 tag: null);
 
             // Assert
-            Assert.Equal(expected, result.ToString());
+            Assert.Equal(expected, DefaultTemplatesUtilities.HtmlContentToString(result));
         }
 
         [Theory]
@@ -273,7 +274,7 @@ namespace Microsoft.AspNet.Mvc.Rendering
                 tag: null);
 
             // Assert
-            Assert.Equal(expected, result.ToString());
+            Assert.Equal(expected, DefaultTemplatesUtilities.HtmlContentToString(result));
         }
 
         [Theory]
@@ -297,7 +298,7 @@ namespace Microsoft.AspNet.Mvc.Rendering
                 tag: null);
 
             // Assert
-            Assert.Equal(expected, result.ToString());
+            Assert.Equal(expected, DefaultTemplatesUtilities.HtmlContentToString(result));
         }
 
         [Fact]
@@ -330,7 +331,7 @@ namespace Microsoft.AspNet.Mvc.Rendering
                 tag: null);
 
             // Assert
-            Assert.Equal(expected, result.ToString());
+            Assert.Equal(expected, DefaultTemplatesUtilities.HtmlContentToString(result));
         }
 
         // Adds errors for various parts of the model, including the root.

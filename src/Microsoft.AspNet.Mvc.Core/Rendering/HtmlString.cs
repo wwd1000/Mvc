@@ -10,7 +10,7 @@ namespace Microsoft.AspNet.Mvc.Rendering
         public static new readonly HtmlString Empty = new HtmlString(string.Empty);
 
         public HtmlString(string input)
-            : base(input, encoded: true)
+            : base(input, encodeOnWrite: false)
         {
         }
     }

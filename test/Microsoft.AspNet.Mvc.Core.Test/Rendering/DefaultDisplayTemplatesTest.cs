@@ -8,6 +8,7 @@ using System.Globalization;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Microsoft.AspNet.HtmlContent;
 using Microsoft.AspNet.Mvc.ModelBinding;
 using Microsoft.AspNet.Mvc.Rendering;
 using Moq;
@@ -63,7 +64,7 @@ namespace Microsoft.AspNet.Mvc.Core
             var result = DefaultDisplayTemplates.ObjectTemplate(html);
 
             // Assert
-            Assert.Equal(expected, result);
+            Assert.Equal(expected, DefaultTemplatesUtilities.HtmlContentToString(result));
         }
 
         [Fact]
@@ -82,7 +83,7 @@ namespace Microsoft.AspNet.Mvc.Core
             var result = DefaultDisplayTemplates.ObjectTemplate(html);
 
             // Assert
-            Assert.Equal("(null value)", result);
+            Assert.Equal("(null value)", DefaultTemplatesUtilities.HtmlContentToString(result));
         }
 
         [Theory]
@@ -112,7 +113,7 @@ namespace Microsoft.AspNet.Mvc.Core
             var result = DefaultDisplayTemplates.ObjectTemplate(html);
 
             // Assert
-            Assert.Equal(expectedResult, result);
+            Assert.Equal(expectedResult, DefaultTemplatesUtilities.HtmlContentToString(result));
         }
 
         [Fact]
@@ -135,7 +136,7 @@ namespace Microsoft.AspNet.Mvc.Core
             var result = DefaultDisplayTemplates.ObjectTemplate(htmlHelper);
 
             // Assert
-            Assert.Equal(expected, result);
+            Assert.Equal(expected, DefaultTemplatesUtilities.HtmlContentToString(result));
         }
 
         [Fact]
@@ -162,7 +163,7 @@ namespace Microsoft.AspNet.Mvc.Core
             var result = DefaultDisplayTemplates.ObjectTemplate(html);
 
             // Assert
-            Assert.Equal(expected, result);
+            Assert.Equal(expected, DefaultTemplatesUtilities.HtmlContentToString(result));
         }
 
         [Fact]
@@ -204,7 +205,7 @@ namespace Microsoft.AspNet.Mvc.Core
             var result = DefaultDisplayTemplates.ObjectTemplate(html);
 
             // Assert
-            Assert.Equal(expected, result);
+            Assert.Equal(expected, DefaultTemplatesUtilities.HtmlContentToString(result));
         }
 
         [Fact]
@@ -223,7 +224,7 @@ namespace Microsoft.AspNet.Mvc.Core
             var result = DefaultDisplayTemplates.HiddenInputTemplate(html);
 
             // Assert
-            Assert.Equal("HtmlEncode[[Formatted string]]", result);
+            Assert.Equal("HtmlEncode[[Formatted string]]", DefaultTemplatesUtilities.HtmlContentToString(result));
         }
 
         [Fact]
@@ -249,7 +250,7 @@ namespace Microsoft.AspNet.Mvc.Core
             var result = DefaultDisplayTemplates.HiddenInputTemplate(html);
 
             // Assert
-            Assert.Empty(result);
+            Assert.Empty(result.ToString());
         }
 
         [Fact]
@@ -268,7 +269,7 @@ namespace Microsoft.AspNet.Mvc.Core
             var result = helper.Display("Property1");
 
             // Assert
-            Assert.Equal("HtmlEncode[[ViewData string]]", result.ToString());
+            Assert.Equal("HtmlEncode[[ViewData string]]", DefaultTemplatesUtilities.HtmlContentToString(result).ToString());
         }
 
         [Fact]
@@ -287,7 +288,7 @@ namespace Microsoft.AspNet.Mvc.Core
             var result = helper.DisplayFor(m => m.Property1);
 
             // Assert
-            Assert.Equal("HtmlEncode[[Model string]]", result.ToString());
+            Assert.Equal("HtmlEncode[[Model string]]", DefaultTemplatesUtilities.HtmlContentToString(result).ToString());
         }
 
         [Fact]
@@ -305,7 +306,7 @@ namespace Microsoft.AspNet.Mvc.Core
             var result = helper.Display("Property1");
 
             // Assert
-            Assert.Equal("HtmlEncode[[Model string]]", result.ToString());
+            Assert.Equal("HtmlEncode[[Model string]]", DefaultTemplatesUtilities.HtmlContentToString(result).ToString());
         }
 
         [Theory]
@@ -326,7 +327,7 @@ namespace Microsoft.AspNet.Mvc.Core
             var result = helper.DisplayFor(m => m.Property1);
 
             // Assert
-            Assert.Equal("HtmlEncode[[]]", result.ToString());
+            Assert.Equal("HtmlEncode[[]]", DefaultTemplatesUtilities.HtmlContentToString(result).ToString());
         }
 
         [Fact]

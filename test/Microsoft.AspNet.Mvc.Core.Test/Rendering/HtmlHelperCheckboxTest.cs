@@ -27,7 +27,7 @@ namespace Microsoft.AspNet.Mvc.Rendering
                                        htmlAttributes: new { @checked = "checked", value = "false" });
 
             // Assert
-            Assert.Equal(expected, html.ToString());
+            Assert.Equal(expected, DefaultTemplatesUtilities.HtmlContentToString(html));
         }
 
         [Fact]
@@ -44,7 +44,7 @@ namespace Microsoft.AspNet.Mvc.Rendering
                                        htmlAttributes: new { @checked = "unchecked", value = "false" });
 
             // Assert
-            Assert.Equal(expected, html.ToString());
+            Assert.Equal(expected, DefaultTemplatesUtilities.HtmlContentToString(html));
         }
 
         [Fact]
@@ -61,7 +61,7 @@ namespace Microsoft.AspNet.Mvc.Rendering
                                        htmlAttributes: new { @checked = "unchecked", value = "false" });
 
             // Assert
-            Assert.Equal(expected, html.ToString());
+            Assert.Equal(expected, DefaultTemplatesUtilities.HtmlContentToString(html));
         }
 
         [Fact]
@@ -89,7 +89,7 @@ namespace Microsoft.AspNet.Mvc.Rendering
             var html = helper.CheckBox("Property1", isChecked: true, htmlAttributes: null);
 
             // Assert
-            Assert.Equal(expected, html.ToString());
+            Assert.Equal(expected, DefaultTemplatesUtilities.HtmlContentToString(html));
         }
 
         [Fact]
@@ -106,7 +106,7 @@ namespace Microsoft.AspNet.Mvc.Rendering
             var html = helper.CheckBox("Property1", isChecked: null, htmlAttributes: null);
 
             // Assert
-            Assert.Equal(expected, html.ToString());
+            Assert.Equal(expected, DefaultTemplatesUtilities.HtmlContentToString(html));
         }
 
         [Fact]
@@ -122,7 +122,7 @@ namespace Microsoft.AspNet.Mvc.Rendering
             var html = helper.CheckBox("Name", isChecked: null, htmlAttributes: null);
 
             // Assert
-            Assert.Equal(expected, html.ToString());
+            Assert.Equal(expected, DefaultTemplatesUtilities.HtmlContentToString(html));
         }
 
         [Fact]
@@ -139,7 +139,7 @@ namespace Microsoft.AspNet.Mvc.Rendering
             var html = helper.CheckBox("Property1", isChecked: true, htmlAttributes: htmlAttributes);
 
             // Assert
-            Assert.Equal(expected, html.ToString());
+            Assert.Equal(expected, DefaultTemplatesUtilities.HtmlContentToString(html));
         }
 
         [Fact]
@@ -157,7 +157,7 @@ namespace Microsoft.AspNet.Mvc.Rendering
             var html = helper.CheckBox("Property1", isChecked: false, htmlAttributes: dictionary);
 
             // Assert
-            Assert.Equal(expected, html.ToString());
+            Assert.Equal(expected, DefaultTemplatesUtilities.HtmlContentToString(html));
         }
 
         [Fact]
@@ -176,7 +176,7 @@ namespace Microsoft.AspNet.Mvc.Rendering
             var html = helper.CheckBox("Property1", isChecked: false, htmlAttributes: dictionary);
 
             // Assert
-            Assert.Equal(expected, html.ToString());
+            Assert.Equal(expected, DefaultTemplatesUtilities.HtmlContentToString(html));
         }
 
         [Fact]
@@ -194,7 +194,7 @@ namespace Microsoft.AspNet.Mvc.Rendering
             var html = helper.CheckBox(string.Empty, isChecked: false, htmlAttributes: attributes);
 
             // Assert
-            Assert.Equal(expected, html.ToString());
+            Assert.Equal(expected, DefaultTemplatesUtilities.HtmlContentToString(html));
         }
 
         [Fact]
@@ -210,7 +210,7 @@ namespace Microsoft.AspNet.Mvc.Rendering
             var html = helper.CheckBox("ComplexProperty.Property1", isChecked: null, htmlAttributes: null);
 
             // Assert
-            Assert.Equal(expected, html.ToString());
+            Assert.Equal(expected, DefaultTemplatesUtilities.HtmlContentToString(html));
         }
 
         [Fact]
@@ -228,7 +228,7 @@ namespace Microsoft.AspNet.Mvc.Rendering
             var html = helper.CheckBoxFor(m => m.Property1);
 
             // Assert
-            Assert.Equal(expected, html.ToString());
+            Assert.Equal(expected, DefaultTemplatesUtilities.HtmlContentToString(html));
         }
 
         [Theory]
@@ -253,7 +253,7 @@ namespace Microsoft.AspNet.Mvc.Rendering
             var html = helper.CheckBoxFor(m => m.Property1);
 
             // Assert
-            Assert.Equal(expected, html.ToString());
+            Assert.Equal(expected, DefaultTemplatesUtilities.HtmlContentToString(html));
         }
 
         [Fact]
@@ -268,7 +268,7 @@ namespace Microsoft.AspNet.Mvc.Rendering
             var html = helper.CheckBoxFor(m => m.Property3, new { @checked = "checked", value = "false" });
 
             // Assert
-            Assert.Equal(expected, html.ToString());
+            Assert.Equal(expected, DefaultTemplatesUtilities.HtmlContentToString(html));
         }
 
         [Fact]
@@ -289,7 +289,7 @@ namespace Microsoft.AspNet.Mvc.Rendering
             var html = helper.CheckBoxFor(m => m.Name, htmlAttributes: null);
 
             // Assert
-            Assert.Equal(expected, html.ToString());
+            Assert.Equal(expected, DefaultTemplatesUtilities.HtmlContentToString(html));
         }
 
         [Theory]
@@ -312,7 +312,7 @@ namespace Microsoft.AspNet.Mvc.Rendering
             var html = helper.CheckBoxFor(m => m.Property1);
 
             // Assert
-            Assert.Equal(expected, html.ToString());
+            Assert.Equal(expected, DefaultTemplatesUtilities.HtmlContentToString(html));
         }
 
         [Fact]
@@ -329,7 +329,7 @@ namespace Microsoft.AspNet.Mvc.Rendering
             var html = helper.CheckBoxFor(m => m.Property1, htmlAttributes);
 
             // Assert
-            Assert.Equal(expected, html.ToString());
+            Assert.Equal(expected, DefaultTemplatesUtilities.HtmlContentToString(html));
         }
 
         [Fact]
@@ -346,7 +346,7 @@ namespace Microsoft.AspNet.Mvc.Rendering
             var html = helper.CheckBoxFor(m => m.Property1, attributes);
 
             // Assert
-            Assert.Equal(expected, html.ToString());
+            Assert.Equal(expected, DefaultTemplatesUtilities.HtmlContentToString(html));
         }
 
         [Fact]
@@ -364,7 +364,7 @@ namespace Microsoft.AspNet.Mvc.Rendering
             var html = helper.CheckBoxFor(m => m.Property1, attributes);
 
             // Assert
-            Assert.Equal(expected, html.ToString());
+            Assert.Equal(expected, DefaultTemplatesUtilities.HtmlContentToString(html));
         }
 
         [Fact]
@@ -380,7 +380,7 @@ namespace Microsoft.AspNet.Mvc.Rendering
             var html = helper.CheckBoxFor(m => m.ComplexProperty.Property1, htmlAttributes: null);
 
             // Assert
-            Assert.Equal(expected, html.ToString());
+            Assert.Equal(expected, DefaultTemplatesUtilities.HtmlContentToString(html));
         }
 
         private static ViewDataDictionary<TestModel> GetTestModelViewData()

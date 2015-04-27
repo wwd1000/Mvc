@@ -107,7 +107,7 @@ namespace Microsoft.AspNet.Mvc.TagHelpers
             generator
                 .Setup(mock => mock.GenerateRouteLink(
                     string.Empty, "Default", "http", "contoso.com", "hello=world", null, null))
-                .Returns(new TagBuilder("a", new CommonTestEncoder()))
+                .Returns(new TagBuilder("a"))
                 .Verifiable();
             var anchorTagHelper = new AnchorTagHelper
             {
@@ -150,7 +150,7 @@ namespace Microsoft.AspNet.Mvc.TagHelpers
             generator
                 .Setup(mock => mock.GenerateActionLink(
                     string.Empty, "Index", "Home", "http", "contoso.com", "hello=world", null, null))
-                .Returns(new TagBuilder("a", new CommonTestEncoder()))
+                .Returns(new TagBuilder("a"))
                 .Verifiable();
             var anchorTagHelper = new AnchorTagHelper
             {

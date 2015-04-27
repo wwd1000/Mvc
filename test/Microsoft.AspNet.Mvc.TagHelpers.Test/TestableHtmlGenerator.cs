@@ -71,7 +71,7 @@ namespace Microsoft.AspNet.Mvc.TagHelpers
 
         public override TagBuilder GenerateAntiForgery(ViewContext viewContext)
         {
-            return new TagBuilder("input", new CommonTestEncoder())
+            return new TagBuilder("input")
             {
                 Attributes =
                 {

@@ -8,6 +8,7 @@ using System.IO;
 using System.Linq;
 using System.Security.Claims;
 using System.Threading.Tasks;
+using Microsoft.AspNet.HtmlContent;
 using Microsoft.AspNet.Http;
 using Microsoft.AspNet.Mvc.Rendering;
 using Microsoft.AspNet.PageExecutionInstrumentation;
@@ -416,7 +417,14 @@ namespace Microsoft.AspNet.Mvc.Razor
                     }
                 }
 
-                htmlString.WriteTo(writer);
+                htmlString.WriteTo(writer, encoder);
+                return;
+            }
+
+            var htmlContent = value as IHtmlContent;
+            if (htmlContent != null)
+            {
+                htmlContent.WriteTo(writer, encoder);
                 return;
             }
 

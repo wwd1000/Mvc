@@ -91,12 +91,12 @@ namespace Microsoft.AspNet.Mvc.Rendering
             };
         }
 
-        public static string CollectionTemplate(IHtmlHelper htmlHelper)
+        public static IHtmlContent CollectionTemplate(IHtmlHelper htmlHelper)
         {
             var model = htmlHelper.ViewData.Model;
             if (model == null)
             {
-                return string.Empty;
+                return StringHtmlContent.Empty;
             }
 
             var collection = model as IEnumerable;
@@ -123,7 +123,7 @@ namespace Microsoft.AspNet.Mvc.Rendering
                 htmlHelper.ViewData.TemplateInfo.HtmlFieldPrefix = string.Empty;
 
                 var fieldNameBase = oldPrefix;
-                var result = new StringBuilder();
+                var result = new BufferedHtmlContent();
 
                 var serviceProvider = htmlHelper.ViewContext.HttpContext.RequestServices;
                 var metadataProvider = serviceProvider.GetRequiredService<IModelMetadataProvider>();
@@ -155,7 +155,7 @@ namespace Microsoft.AspNet.Mvc.Rendering
                     result.Append(output);
                 }
 
-                return result.ToString();
+                return result;
             }
             finally
             {
@@ -196,12 +196,12 @@ namespace Microsoft.AspNet.Mvc.Rendering
             return StringTemplate(htmlHelper);
         }
 
-        public static string HtmlTemplate(IHtmlHelper htmlHelper)
+        public static IHtmlContent HtmlTemplate(IHtmlHelper htmlHelper)
         {
-            return htmlHelper.ViewData.TemplateInfo.FormattedModelValue.ToString();
+            return new StringHtmlContent(htmlHelper.ViewData.TemplateInfo.FormattedModelValue.ToString());
         }
 
-        public static string ObjectTemplate(IHtmlHelper htmlHelper)
+        public static IHtmlContent ObjectTemplate(IHtmlHelper htmlHelper)
         {
             var viewData = htmlHelper.ViewData;
             var templateInfo = viewData.TemplateInfo;
@@ -209,7 +209,7 @@ namespace Microsoft.AspNet.Mvc.Rendering
 
             if (modelExplorer.Model == null)
             {
-                return modelExplorer.Metadata.NullDisplayText;
+                return new StringHtmlContent(modelExplorer.Metadata.NullDisplayText);
             }
 
             if (templateInfo.TemplateDepth > 1)
@@ -220,7 +220,7 @@ namespace Microsoft.AspNet.Mvc.Rendering
                     text = htmlHelper.Encode(text);
                 }
 
-                return text;
+                return new StringHtmlContent(text);
             }
 
             var serviceProvider = htmlHelper.ViewContext.HttpContext.RequestServices;
@@ -245,7 +245,7 @@ namespace Microsoft.AspNet.Mvc.Rendering
                         labelDivTag.SetInnerText(label);
                         labelDivTag.AddCssClass("display-label");
                         content.Append(labelDivTag);
-                        content.Append(StringHtmlContent.FromEncodedText(Environment.NewLine));
+                        content.Append(Environment.NewLine);
                     }
 
                     containerDivTag = new TagBuilder("div");
@@ -264,17 +264,17 @@ namespace Microsoft.AspNet.Mvc.Rendering
 
                 if (!propertyMetadata.HideSurroundingHtml)
                 {
-                    containerDivTag.SetInnerText(templateBuilder.Build());
+                    containerDivTag.InnerHtml = templateBuilder.Build();
                     content.Append(containerDivTag);
-                    content.Append(StringHtmlContent.FromEncodedText(Environment.NewLine));
+                    content.Append(Environment.NewLine);
                 }
                 else
                 {
-                    content.Append(StringHtmlContent.FromEncodedText(templateBuilder.Build()));
+                    content.Append(templateBuilder.Build());
                 }
             }
 
-            return content.ToString();
+            return content;
         }
 
         private static bool ShouldShow(ModelExplorer modelExplorer, TemplateInfo templateInfo)
@@ -287,7 +287,7 @@ namespace Microsoft.AspNet.Mvc.Rendering
 
         public static IHtmlContent StringTemplate(IHtmlHelper htmlHelper)
         {
-            return StringHtmlContent.FromEncodedText(htmlHelper.Encode(htmlHelper.ViewData.TemplateInfo.FormattedModelValue));
+            return new StringHtmlContent(htmlHelper.Encode(htmlHelper.ViewData.TemplateInfo.FormattedModelValue));
         }
 
         public static IHtmlContent UrlTemplate(IHtmlHelper htmlHelper)

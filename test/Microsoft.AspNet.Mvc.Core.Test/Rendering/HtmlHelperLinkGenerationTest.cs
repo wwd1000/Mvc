@@ -77,10 +77,10 @@ namespace Microsoft.AspNet.Mvc.Rendering
                                             hostname: hostname,
                                             fragment: fragment,
                                             routeValues: routeValues,
-                                            htmlAttributes: htmlAttributes).ToString();
+                                            htmlAttributes: htmlAttributes);
 
             // Assert
-            Assert.Equal(expectedLink, actualLink);
+            Assert.Equal(expectedLink, DefaultTemplatesUtilities.HtmlContentToString(actualLink));
         }
 
         public static IEnumerable<object[]> RouteLinkGenerationData
@@ -140,10 +140,10 @@ namespace Microsoft.AspNet.Mvc.Rendering
                                             hostName: hostname,
                                             fragment: fragment,
                                             routeValues: routeValues,
-                                            htmlAttributes: htmlAttributes).ToString();
+                                            htmlAttributes: htmlAttributes);
 
             // Assert
-            Assert.Equal(expectedLink, actualLink);
+            Assert.Equal(expectedLink, DefaultTemplatesUtilities.HtmlContentToString(actualLink));
         }
 
         private string GetRouteValuesAsString(object routeValues)

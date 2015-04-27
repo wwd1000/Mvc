@@ -51,7 +51,7 @@ namespace Microsoft.AspNet.Mvc.Rendering
             var result = helper.Password("Property1", value: null, htmlAttributes: attributes);
 
             // Assert
-            Assert.Equal(expected, result.ToString());
+            Assert.Equal(expected, DefaultTemplatesUtilities.HtmlContentToString(result));
         }
 
         [Theory]
@@ -68,7 +68,7 @@ namespace Microsoft.AspNet.Mvc.Rendering
             var result = helper.Password("Property1", "explicit-value", attributes);
 
             // Assert
-            Assert.Equal(expected, result.ToString());
+            Assert.Equal(expected, DefaultTemplatesUtilities.HtmlContentToString(result));
         }
 
         [Fact]
@@ -84,7 +84,7 @@ namespace Microsoft.AspNet.Mvc.Rendering
             var result = helper.Password("Property1", "explicit-value", htmlAttributes: null);
 
             // Assert
-            Assert.Equal(expected, result.ToString());
+            Assert.Equal(expected, DefaultTemplatesUtilities.HtmlContentToString(result));
         }
 
         [Fact]
@@ -101,7 +101,7 @@ namespace Microsoft.AspNet.Mvc.Rendering
             var result = helper.Password("Property1", "explicit-value", htmlAttributes: null);
 
             // Assert
-            Assert.Equal(expected, result.ToString());
+            Assert.Equal(expected, DefaultTemplatesUtilities.HtmlContentToString(result));
         }
 
         [Fact]
@@ -117,7 +117,7 @@ namespace Microsoft.AspNet.Mvc.Rendering
             var result = helper.Password(name, "explicit-value", htmlAttributes: null);
 
             // Assert
-            Assert.Equal(expected, result.ToString());
+            Assert.Equal(expected, DefaultTemplatesUtilities.HtmlContentToString(result));
         }
 
         [Fact]
@@ -152,7 +152,7 @@ namespace Microsoft.AspNet.Mvc.Rendering
             var result = helper.Password("Property1", value: null, htmlAttributes: attributes);
 
             // Assert
-            Assert.Equal(expected, result.ToString());
+            Assert.Equal(expected, DefaultTemplatesUtilities.HtmlContentToString(result));
         }
 
         [Fact]
@@ -167,7 +167,7 @@ namespace Microsoft.AspNet.Mvc.Rendering
             var result = helper.Password("Property2", value: null, htmlAttributes: null);
 
             // Assert
-            Assert.Equal(expected, result.ToString());
+            Assert.Equal(expected, DefaultTemplatesUtilities.HtmlContentToString(result));
         }
 
         public static IEnumerable<object[]> PasswordWithComplexExpressions_UsesIdDotSeparatorData
@@ -204,7 +204,7 @@ namespace Microsoft.AspNet.Mvc.Rendering
             var result = helper.Password(expression, value: null, htmlAttributes: attributes);
 
             // Assert
-            Assert.Equal(expected, result.ToString());
+            Assert.Equal(expected, DefaultTemplatesUtilities.HtmlContentToString(result));
         }
 
         [Theory]
@@ -222,7 +222,7 @@ namespace Microsoft.AspNet.Mvc.Rendering
             var result = helper.PasswordFor(m => m.Property1, htmlAttributes);
 
             // Assert
-            Assert.Equal(expected, result.ToString());
+            Assert.Equal(expected, DefaultTemplatesUtilities.HtmlContentToString(result));
         }
 
         [Fact]
@@ -237,7 +237,7 @@ namespace Microsoft.AspNet.Mvc.Rendering
             var result = helper.PasswordFor(m => m.Property1, htmlAttributes: null);
 
             // Assert
-            Assert.Equal(expected, result.ToString());
+            Assert.Equal(expected, DefaultTemplatesUtilities.HtmlContentToString(result));
         }
 
         [Fact]
@@ -259,7 +259,7 @@ namespace Microsoft.AspNet.Mvc.Rendering
             var result = helper.PasswordFor(m => m.Property1, attributes);
 
             // Assert
-            Assert.Equal(expected, result.ToString());
+            Assert.Equal(expected, DefaultTemplatesUtilities.HtmlContentToString(result));
         }
 
         [Fact]
@@ -274,7 +274,7 @@ namespace Microsoft.AspNet.Mvc.Rendering
             var result = helper.PasswordFor(m => m.Property2, htmlAttributes: null);
 
             // Assert
-            Assert.Equal(expected, result.ToString());
+            Assert.Equal(expected, DefaultTemplatesUtilities.HtmlContentToString(result));
         }
 
         public static TheoryData PasswordFor_WithComplexExpressionsData
@@ -328,7 +328,7 @@ namespace Microsoft.AspNet.Mvc.Rendering
             var result = helper.PasswordFor(expression, attributes);
 
             // Assert
-            Assert.Equal(expected, result.ToString());
+            Assert.Equal(expected, DefaultTemplatesUtilities.HtmlContentToString(result));
         }
 
         private static ViewDataDictionary<PasswordModel> GetViewDataWithNullModelAndNonEmptyViewData()

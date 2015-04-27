@@ -41,7 +41,7 @@ namespace Microsoft.AspNet.Mvc.Rendering
             var result = helper.Hidden("ProductName", new byte[] { 23, 43, 53 }, htmlAttributes: null);
 
             // Assert
-            Assert.Equal(expected, result.ToString());
+            Assert.Equal(expected, DefaultTemplatesUtilities.HtmlContentToString(result));
         }
 
         [Theory]
@@ -56,7 +56,7 @@ namespace Microsoft.AspNet.Mvc.Rendering
             var result = helper.Hidden("Property1", "test", attributes);
 
             // Assert
-            Assert.Equal(expected, result.ToString());
+            Assert.Equal(expected, DefaultTemplatesUtilities.HtmlContentToString(result));
         }
 
         [Fact]
@@ -72,7 +72,7 @@ namespace Microsoft.AspNet.Mvc.Rendering
             var result = helper.Hidden("Property1", "explicit-value", attributes);
 
             // Assert
-            Assert.Equal(expected, result.ToString());
+            Assert.Equal(expected, DefaultTemplatesUtilities.HtmlContentToString(result));
         }
 
         [Fact]
@@ -88,7 +88,7 @@ namespace Microsoft.AspNet.Mvc.Rendering
             var result = helper.Hidden("Property1", "test", attributes);
 
             // Assert
-            Assert.Equal(expected, result.ToString());
+            Assert.Equal(expected, DefaultTemplatesUtilities.HtmlContentToString(result));
         }
 
         [Fact]
@@ -104,7 +104,7 @@ namespace Microsoft.AspNet.Mvc.Rendering
             var result = helper.Hidden("Property1", "test", attributes);
 
             // Assert
-            Assert.Equal(expected, result.ToString());
+            Assert.Equal(expected, DefaultTemplatesUtilities.HtmlContentToString(result));
         }
 
         [Fact]
@@ -119,7 +119,7 @@ namespace Microsoft.AspNet.Mvc.Rendering
             var result = helper.Hidden("Property1", value: "explicit-value", htmlAttributes: new { value = "attribute-value" });
 
             // Assert
-            Assert.Equal(expected, result.ToString());
+            Assert.Equal(expected, DefaultTemplatesUtilities.HtmlContentToString(result));
         }
 
         [Fact]
@@ -135,7 +135,7 @@ namespace Microsoft.AspNet.Mvc.Rendering
             var result = helper.Hidden("Property1", value: "explicit-value", htmlAttributes: new { value = "attribute-value" });
 
             // Assert
-            Assert.Equal(expected, result.ToString());
+            Assert.Equal(expected, DefaultTemplatesUtilities.HtmlContentToString(result));
         }
 
         [Fact]
@@ -151,7 +151,7 @@ namespace Microsoft.AspNet.Mvc.Rendering
             var result = helper.Hidden("Property1", value: null, htmlAttributes: new { value = "attribute-value" });
 
             // Assert
-            Assert.Equal(expected, result.ToString());
+            Assert.Equal(expected, DefaultTemplatesUtilities.HtmlContentToString(result));
         }
 
         [Fact]
@@ -168,7 +168,7 @@ namespace Microsoft.AspNet.Mvc.Rendering
             var result = helper.Hidden("Property1", value: null, htmlAttributes: new { value = "attribute-value" });
 
             // Assert
-            Assert.Equal(expected, result.ToString());
+            Assert.Equal(expected, DefaultTemplatesUtilities.HtmlContentToString(result));
         }
 
         [Fact]
@@ -185,7 +185,7 @@ namespace Microsoft.AspNet.Mvc.Rendering
             var result = helper.Hidden("Property1", value: null, htmlAttributes: new { value = "attribute-value" });
 
             // Assert
-            Assert.Equal(expected, result.ToString());
+            Assert.Equal(expected, DefaultTemplatesUtilities.HtmlContentToString(result));
         }
 
         [Fact]
@@ -201,7 +201,7 @@ namespace Microsoft.AspNet.Mvc.Rendering
             var result = helper.Hidden("keyNotFound", value: null, htmlAttributes: attributes);
 
             // Assert
-            Assert.Equal(expected, result.ToString());
+            Assert.Equal(expected, DefaultTemplatesUtilities.HtmlContentToString(result));
         }
 
         [Fact]
@@ -217,7 +217,7 @@ namespace Microsoft.AspNet.Mvc.Rendering
             var result = helper.Hidden("Property1", "PropValue", htmlAttributes: null);
 
             // Assert
-            Assert.Equal(expected, result.ToString());
+            Assert.Equal(expected, DefaultTemplatesUtilities.HtmlContentToString(result));
         }
 
         [Fact]
@@ -232,7 +232,7 @@ namespace Microsoft.AspNet.Mvc.Rendering
             var result = helper.Hidden(string.Empty, "fooValue", htmlAttributes: null);
 
             // Assert
-            Assert.Equal(expected, result.ToString());
+            Assert.Equal(expected, DefaultTemplatesUtilities.HtmlContentToString(result));
         }
 
         [Fact]
@@ -253,7 +253,7 @@ namespace Microsoft.AspNet.Mvc.Rendering
             var result = helper.Hidden("Property1", "explicit-value", htmlAttributes: null);
 
             // Assert
-            Assert.Equal(expected, result.ToString());
+            Assert.Equal(expected, DefaultTemplatesUtilities.HtmlContentToString(result));
         }
 
         [Fact]
@@ -275,7 +275,7 @@ namespace Microsoft.AspNet.Mvc.Rendering
             var result = helper.Hidden("Property1", value: null, htmlAttributes: null);
 
             // Assert
-            Assert.Equal(expected, result.ToString());
+            Assert.Equal(expected, DefaultTemplatesUtilities.HtmlContentToString(result));
         }
 
         [Fact]
@@ -310,7 +310,7 @@ namespace Microsoft.AspNet.Mvc.Rendering
             var result = helper.Hidden("Property1", value: null, htmlAttributes: attributes);
 
             // Assert
-            Assert.Equal(expected, result.ToString());
+            Assert.Equal(expected, DefaultTemplatesUtilities.HtmlContentToString(result));
         }
 
         [Fact]
@@ -325,7 +325,7 @@ namespace Microsoft.AspNet.Mvc.Rendering
             var result = helper.Hidden("Property2", value: null, htmlAttributes: null);
 
             // Assert
-            Assert.Equal(expected, result.ToString());
+            Assert.Equal(expected, DefaultTemplatesUtilities.HtmlContentToString(result));
         }
 
         public static IEnumerable<object[]> HiddenWithComplexExpressions_UsesValueFromViewDataData
@@ -371,7 +371,7 @@ namespace Microsoft.AspNet.Mvc.Rendering
             var result = helper.Hidden(expression, value: null, htmlAttributes: attributes);
 
             // Assert
-            Assert.Equal(expected, result.ToString());
+            Assert.Equal(expected, DefaultTemplatesUtilities.HtmlContentToString(result));
         }
 
         public static IEnumerable<object[]> HiddenWithComplexExpressions_UsesIdDotSeparatorData
@@ -411,7 +411,7 @@ namespace Microsoft.AspNet.Mvc.Rendering
             var result = helper.Hidden(expression, value: null, htmlAttributes: attributes);
 
             // Assert
-            Assert.Equal(expected, result.ToString());
+            Assert.Equal(expected, DefaultTemplatesUtilities.HtmlContentToString(result));
         }
 
         [Fact]
@@ -426,7 +426,7 @@ namespace Microsoft.AspNet.Mvc.Rendering
             var result = helper.HiddenFor(m => m.Bytes, htmlAttributes: null);
 
             // Assert
-            Assert.Equal(expected, result.ToString());
+            Assert.Equal(expected, DefaultTemplatesUtilities.HtmlContentToString(result));
         }
 
         [Theory]
@@ -441,7 +441,7 @@ namespace Microsoft.AspNet.Mvc.Rendering
             var result = helper.HiddenFor(m => m.Property1, htmlAttributes);
 
             // Assert
-            Assert.Equal(expected, result.ToString());
+            Assert.Equal(expected, DefaultTemplatesUtilities.HtmlContentToString(result));
         }
 
         [Fact]
@@ -456,7 +456,7 @@ namespace Microsoft.AspNet.Mvc.Rendering
             var result = helper.HiddenFor(m => m.Property1, htmlAttributes: null);
 
             // Assert
-            Assert.Equal(expected, result.ToString());
+            Assert.Equal(expected, DefaultTemplatesUtilities.HtmlContentToString(result));
         }
 
         [Fact]
@@ -472,7 +472,7 @@ namespace Microsoft.AspNet.Mvc.Rendering
             var result = helper.HiddenFor(m => m.Property1, htmlAttributes: null);
 
             // Assert
-            Assert.Equal(expected, result.ToString());
+            Assert.Equal(expected, DefaultTemplatesUtilities.HtmlContentToString(result));
         }
 
         [Fact]
@@ -488,7 +488,7 @@ namespace Microsoft.AspNet.Mvc.Rendering
             var result = helper.HiddenFor(m => m.Property1, htmlAttributes: null);
 
             // Assert
-            Assert.Equal(expected, result.ToString());
+            Assert.Equal(expected, DefaultTemplatesUtilities.HtmlContentToString(result));
         }
 
         [Fact]
@@ -503,7 +503,7 @@ namespace Microsoft.AspNet.Mvc.Rendering
             var result = helper.HiddenFor(m => m.Property1, attributes);
 
             // Assert
-            Assert.Equal(expected, result.ToString());
+            Assert.Equal(expected, DefaultTemplatesUtilities.HtmlContentToString(result));
         }
 
         // This test ensures that specifying a the prefix does not affect the expression result.
@@ -521,7 +521,7 @@ namespace Microsoft.AspNet.Mvc.Rendering
             var result = helper.HiddenFor(m => m.Property1);
 
             // Assert
-            Assert.Equal(expected, result.ToString());
+            Assert.Equal(expected, DefaultTemplatesUtilities.HtmlContentToString(result));
         }
 
         [Fact]
@@ -543,7 +543,7 @@ namespace Microsoft.AspNet.Mvc.Rendering
             var result = helper.HiddenFor(m => m.Property1);
 
             // Assert
-            Assert.Equal(expected, result.ToString());
+            Assert.Equal(expected, DefaultTemplatesUtilities.HtmlContentToString(result));
         }
 
         [Fact]
@@ -563,7 +563,7 @@ namespace Microsoft.AspNet.Mvc.Rendering
             var result = helper.HiddenFor(m => m.Property1, attributes);
 
             // Assert
-            Assert.Equal(expected, result.ToString());
+            Assert.Equal(expected, DefaultTemplatesUtilities.HtmlContentToString(result));
         }
 
         [Fact]
@@ -578,7 +578,7 @@ namespace Microsoft.AspNet.Mvc.Rendering
             var result = helper.HiddenFor(m => m.Property2, htmlAttributes: null);
 
             // Assert
-            Assert.Equal(expected, result.ToString());
+            Assert.Equal(expected, DefaultTemplatesUtilities.HtmlContentToString(result));
         }
 
         public static TheoryData HiddenFor_UsesPropertyValueIfModelStateDoesNotContainValueData
@@ -639,7 +639,7 @@ namespace Microsoft.AspNet.Mvc.Rendering
             var result = helper.HiddenFor(expression, attributes);
 
             // Assert
-            Assert.Equal(expected, result.ToString());
+            Assert.Equal(expected, DefaultTemplatesUtilities.HtmlContentToString(result));
         }
 
         public static TheoryData HiddenFor_UsesModelStateValueForComplexExpressionsData
@@ -687,7 +687,7 @@ namespace Microsoft.AspNet.Mvc.Rendering
             var result = helper.HiddenFor(expression, attributes);
 
             // Assert
-            Assert.Equal(expected, result.ToString());
+            Assert.Equal(expected, DefaultTemplatesUtilities.HtmlContentToString(result));
         }
 
         [Fact]
@@ -705,7 +705,7 @@ namespace Microsoft.AspNet.Mvc.Rendering
             var result = helper.HiddenFor(m => m.Property1, attributes);
 
             // Assert
-            Assert.Equal(expected, result.ToString());
+            Assert.Equal(expected, DefaultTemplatesUtilities.HtmlContentToString(result));
         }
 
         private static ViewDataDictionary<HiddenModel> GetViewDataWithNullModelAndNonNullViewData()

@@ -175,6 +175,7 @@ namespace Microsoft.AspNet.Mvc.FunctionalTests
             // Assert - 1
             var expected1 = await _resourcesAssembly.ReadResourceAsStringAsync(assertFile + "1.txt");
 
+            Console.WriteLine(response1.Trim());
             Assert.Equal(expected1, response1.Trim());
             Assert.Equal(expected1, response2.Trim());
 

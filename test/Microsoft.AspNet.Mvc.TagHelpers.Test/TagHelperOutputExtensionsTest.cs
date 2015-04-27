@@ -396,7 +396,7 @@ namespace Microsoft.AspNet.Mvc.TagHelpers
             // Arrange
             var tagHelperOutput = new TagHelperOutput("p", outputAttributes);
 
-            var tagBuilder = new TagBuilder("p", new CommonTestEncoder());
+            var tagBuilder = new TagBuilder("p");
             foreach (var attr in tagBuilderAttributes)
             {
                 tagBuilder.Attributes.Add(attr.Key, attr.Value);
@@ -422,7 +422,7 @@ namespace Microsoft.AspNet.Mvc.TagHelpers
             var expectedAttribute = new TagHelperAttribute("type", "btn");
             tagHelperOutput.Attributes.Add(expectedAttribute);
 
-            var tagBuilder = new TagBuilder("p", new CommonTestEncoder());
+            var tagBuilder = new TagBuilder("p");
             tagBuilder.Attributes.Add("type", "hello");
 
             // Act
@@ -442,7 +442,7 @@ namespace Microsoft.AspNet.Mvc.TagHelpers
                 attributes: new TagHelperAttributeList());
             tagHelperOutput.Attributes.Add("class", "Hello");
 
-            var tagBuilder = new TagBuilder("p", new CommonTestEncoder());
+            var tagBuilder = new TagBuilder("p");
             tagBuilder.Attributes.Add("class", "btn");
 
             var expectedAttribute = new TagHelperAttribute("class", "Hello btn");
@@ -468,7 +468,7 @@ namespace Microsoft.AspNet.Mvc.TagHelpers
                 attributes: new TagHelperAttributeList());
             tagHelperOutput.Attributes.Add(originalName, "Hello");
 
-            var tagBuilder = new TagBuilder("p", new CommonTestEncoder());
+            var tagBuilder = new TagBuilder("p");
             tagBuilder.Attributes.Add(updateName, "btn");
 
             // Act
@@ -487,7 +487,7 @@ namespace Microsoft.AspNet.Mvc.TagHelpers
                 "p",
                 attributes: new TagHelperAttributeList());
 
-            var tagBuilder = new TagBuilder("p", new CommonTestEncoder());
+            var tagBuilder = new TagBuilder("p");
             var expectedAttribute = new TagHelperAttribute("visible", "val < 3");
             tagBuilder.Attributes.Add("visible", "val < 3");
 
@@ -507,7 +507,7 @@ namespace Microsoft.AspNet.Mvc.TagHelpers
                 "p",
                 attributes: new TagHelperAttributeList());
 
-            var tagBuilder = new TagBuilder("p", new CommonTestEncoder());
+            var tagBuilder = new TagBuilder("p");
             var expectedAttribute1 = new TagHelperAttribute("class", "btn");
             var expectedAttribute2 = new TagHelperAttribute("class2", "btn");
             tagBuilder.Attributes.Add("class", "btn");
@@ -534,7 +534,7 @@ namespace Microsoft.AspNet.Mvc.TagHelpers
             var expectedAttribute = new TagHelperAttribute("class", "btn");
             tagHelperOutput.Attributes.Add(expectedAttribute);
 
-            var tagBuilder = new TagBuilder("p", new CommonTestEncoder());
+            var tagBuilder = new TagBuilder("p");
 
             // Act
             tagHelperOutput.MergeAttributes(tagBuilder);
@@ -554,7 +554,7 @@ namespace Microsoft.AspNet.Mvc.TagHelpers
             var expectedOutputAttribute = new TagHelperAttribute("class", "btn");
             tagHelperOutput.Attributes.Add(expectedOutputAttribute);
 
-            var tagBuilder = new TagBuilder("p", new CommonTestEncoder());
+            var tagBuilder = new TagBuilder("p");
             var expectedBuilderAttribute = new TagHelperAttribute("for", "hello");
             tagBuilder.Attributes.Add("for", "hello");
 

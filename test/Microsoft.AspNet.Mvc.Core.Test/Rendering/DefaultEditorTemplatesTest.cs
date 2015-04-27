@@ -19,6 +19,8 @@ using Microsoft.Framework.Internal;
 using Microsoft.Framework.WebEncoders;
 using Moq;
 using Xunit;
+using Microsoft.Framework.WebEncoders.Testing;
+using System.IO;
 
 namespace Microsoft.AspNet.Mvc.Core
 {
@@ -111,7 +113,7 @@ namespace Microsoft.AspNet.Mvc.Core
             var result = DefaultEditorTemplates.ObjectTemplate(html);
 
             // Assert
-            Assert.Equal(expected, result);
+            Assert.Equal(expected, DefaultTemplatesUtilities.HtmlContentToString(result));
         }
 
         [Fact]
@@ -134,7 +136,7 @@ namespace Microsoft.AspNet.Mvc.Core
             var result = DefaultEditorTemplates.ObjectTemplate(html);
 
             // Assert
-            Assert.Equal(html.ViewData.ModelMetadata.NullDisplayText, result);
+            Assert.Equal(new StringHtmlContent(html.ViewData.ModelMetadata.NullDisplayText).ToString(), result.ToString());
         }
 
         [Theory]
@@ -167,7 +169,7 @@ namespace Microsoft.AspNet.Mvc.Core
             var result = DefaultEditorTemplates.ObjectTemplate(html);
 
             // Assert
-            Assert.Equal(expectedResult, result);
+            Assert.Equal(new StringHtmlContent(expectedResult).ToString(), DefaultTemplatesUtilities.HtmlContentToString(result));
         }
 
         [Fact]
@@ -196,7 +198,7 @@ Environment.NewLine;
             var result = DefaultEditorTemplates.ObjectTemplate(htmlHelper);
 
             // Assert
-            Assert.Equal(expected, result);
+            Assert.Equal(expected, DefaultTemplatesUtilities.HtmlContentToString(result));
         }
 
         [Fact]
@@ -226,7 +228,7 @@ Environment.NewLine;
             var result = DefaultEditorTemplates.ObjectTemplate(html);
 
             // Assert
-            Assert.Equal(expected, result);
+            Assert.Equal(expected, DefaultTemplatesUtilities.HtmlContentToString(result));
         }
 
         [Fact]
@@ -270,7 +272,7 @@ Environment.NewLine;
             var result = DefaultEditorTemplates.ObjectTemplate(html);
 
             // Assert
-            Assert.Equal(expected, result);
+            Assert.Equal(expected, DefaultTemplatesUtilities.HtmlContentToString(result));
         }
 
         [Fact]
@@ -292,7 +294,7 @@ Environment.NewLine;
             var result = DefaultEditorTemplates.HiddenInputTemplate(html);
 
             // Assert
-            Assert.Equal(expected, result);
+            Assert.Equal(expected, DefaultTemplatesUtilities.HtmlContentToString(result));
         }
 
         [Fact]
@@ -319,12 +321,13 @@ Environment.NewLine;
             var result = DefaultEditorTemplates.HiddenInputTemplate(html);
 
             // Assert
-            Assert.Equal(expected, result);
+            Assert.Equal(expected, DefaultTemplatesUtilities.HtmlContentToString(result));
         }
 
         [Fact]
         public void MultilineTextTemplate_ReturnsTextArea()
         {
+            //System.Diagnostics.Debugger.Launch();
             // Arrange
             var expected =
                 "<textarea class=\"HtmlEncode[[text-box multi-line]]\" id=\"HtmlEncode[[FieldPrefix]]\" name=\"HtmlEncode[[FieldPrefix]]\">" +
@@ -343,7 +346,7 @@ Environment.NewLine;
             var result = DefaultEditorTemplates.MultilineTemplate(html);
 
             // Assert
-            Assert.Equal(expected, result);
+            Assert.Equal(expected, DefaultTemplatesUtilities.HtmlContentToString(result));
         }
 
         [Theory]
@@ -373,7 +376,7 @@ Environment.NewLine;
                 additionalViewData: null);
 
             // Assert
-            Assert.Equal(expectedResult, result.ToString());
+            Assert.Equal(expectedResult, DefaultTemplatesUtilities.HtmlContentToString(result));
         }
 
         [Theory]
@@ -402,7 +405,7 @@ Environment.NewLine;
                 additionalViewData: null);
 
             // Assert
-            Assert.Equal(expectedResult, result.ToString());
+            Assert.Equal(expectedResult, DefaultTemplatesUtilities.HtmlContentToString(result));
         }
 
         [Theory]
@@ -441,7 +444,7 @@ Environment.NewLine;
                 additionalViewData: null);
 
             // Assert
-            Assert.Equal(expectedResult, result.ToString());
+            Assert.Equal(expectedResult, DefaultTemplatesUtilities.HtmlContentToString(result));
         }
 
         [Theory]
@@ -479,7 +482,7 @@ Environment.NewLine;
                 additionalViewData: null);
 
             // Assert
-            Assert.Equal(expectedResult, result.ToString());
+            Assert.Equal(expectedResult, DefaultTemplatesUtilities.HtmlContentToString(result));
         }
 
         [Theory]
@@ -518,7 +521,7 @@ Environment.NewLine;
                 additionalViewData: null);
 
             // Assert
-            Assert.Equal(expectedResult, result.ToString());
+            Assert.Equal(expectedResult, DefaultTemplatesUtilities.HtmlContentToString(result));
         }
 
         [Theory]
@@ -556,7 +559,7 @@ Environment.NewLine;
                 additionalViewData: null);
 
             // Assert
-            Assert.Equal(expectedResult, result.ToString());
+            Assert.Equal(expectedResult, DefaultTemplatesUtilities.HtmlContentToString(result));
         }
 
         [Fact]
@@ -577,7 +580,7 @@ Environment.NewLine;
             // Assert
             Assert.Equal(
                 "<input class=\"HtmlEncode[[text-box single-line]]\" id=\"HtmlEncode[[Property1]]\" name=\"HtmlEncode[[Property1]]\" type=\"HtmlEncode[[text]]\" value=\"HtmlEncode[[ViewData string]]\" />",
-                result.ToString());
+               DefaultTemplatesUtilities.HtmlContentToString(result));
         }
 
         // DateTime-local is not special-cased unless using Html5DateRenderingMode.Rfc3339.
@@ -625,7 +628,7 @@ Environment.NewLine;
             var result = helper.Editor("");
 
             // Assert
-            Assert.Equal(expectedInput, result.ToString());
+            Assert.Equal(expectedInput, DefaultTemplatesUtilities.HtmlContentToString(result));
         }
 
         [Theory]
@@ -675,7 +678,7 @@ Environment.NewLine;
             var result = helper.Editor("");
 
             // Assert
-            Assert.Equal(expectedInput, result.ToString());
+            Assert.Equal(expectedInput, DefaultTemplatesUtilities.HtmlContentToString(result));
         }
 
         [Theory]
@@ -729,7 +732,7 @@ Environment.NewLine;
             var result = helper.Editor("");
 
             // Assert
-            Assert.Equal(expectedInput, result.ToString());
+            Assert.Equal(expectedInput, DefaultTemplatesUtilities.HtmlContentToString(result));
         }
 
         [Fact]
@@ -750,7 +753,7 @@ Environment.NewLine;
             // Assert
             Assert.Equal(
                 "<input class=\"HtmlEncode[[text-box single-line]]\" id=\"HtmlEncode[[Property1]]\" name=\"HtmlEncode[[Property1]]\" type=\"HtmlEncode[[text]]\" value=\"HtmlEncode[[Model string]]\" />",
-                result.ToString());
+               DefaultTemplatesUtilities.HtmlContentToString(result));
         }
 
         [Fact]
@@ -770,7 +773,7 @@ Environment.NewLine;
             // Assert
             Assert.Equal(
                 "<input class=\"HtmlEncode[[text-box single-line]]\" id=\"HtmlEncode[[Property1]]\" name=\"HtmlEncode[[Property1]]\" type=\"HtmlEncode[[text]]\" value=\"HtmlEncode[[Model string]]\" />",
-                result.ToString());
+               DefaultTemplatesUtilities.HtmlContentToString(result));
         }
 
         [Theory]
@@ -793,7 +796,7 @@ Environment.NewLine;
             // Assert
             Assert.Equal(
                 "<input class=\"HtmlEncode[[text-box single-line]]\" id=\"HtmlEncode[[Property1]]\" name=\"HtmlEncode[[Property1]]\" type=\"HtmlEncode[[text]]\" value=\"\" />",
-                result.ToString());
+                DefaultTemplatesUtilities.HtmlContentToString(result));
         }
 
         [Fact]
@@ -826,8 +829,8 @@ Environment.NewLine;
             // Arrange
             var viewEngine = new Mock<ICompositeViewEngine>(MockBehavior.Strict);
             viewEngine
-                .Setup(v => v.FindPartialView(It.IsAny<ActionContext>(), 
-                                              It.Is<string>(view => String.Equals(view, 
+                .Setup(v => v.FindPartialView(It.IsAny<ActionContext>(),
+                                              It.Is<string>(view => String.Equals(view,
                                                                                   "EditorTemplates/String"))))
                 .Returns(ViewEngineResult.Found(string.Empty, new Mock<IView>().Object))
                 .Verifiable();
@@ -921,7 +924,7 @@ Environment.NewLine;
                 (_innerHelper as ICanHasViewContext)?.Contextualize(viewContext);
             }
 
-            public HtmlString ActionLink(
+            public IHtmlContent ActionLink(
                 [NotNull] string linkText,
                 string actionName,
                 string controllerName,
@@ -934,7 +937,7 @@ Environment.NewLine;
                 throw new NotImplementedException();
             }
 
-            public HtmlString AntiForgeryToken()
+            public IHtmlContent AntiForgeryToken()
             {
                 throw new NotImplementedException();
             }
@@ -958,12 +961,12 @@ Environment.NewLine;
                 throw new NotImplementedException();
             }
 
-            public HtmlString CheckBox(string name, bool? isChecked, object htmlAttributes)
+            public IHtmlContent CheckBox(string name, bool? isChecked, object htmlAttributes)
             {
                 return HelperName("__CheckBox__", htmlAttributes);
             }
 
-            public HtmlString Display(
+            public IHtmlContent Display(
                 string expression,
                 string templateName,
                 string htmlFieldName,
@@ -982,7 +985,7 @@ Environment.NewLine;
                 throw new NotImplementedException();
             }
 
-            public HtmlString DropDownList(
+            public IHtmlContent DropDownList(
                 string name,
                 IEnumerable<SelectListItem> selectList,
                 string optionLabel,
@@ -991,7 +994,7 @@ Environment.NewLine;
                 return HelperName("__DropDownList__", htmlAttributes);
             }
 
-            public HtmlString Editor(
+            public IHtmlContent Editor(
                 string expression,
                 string templateName,
                 string htmlFieldName,
@@ -1042,7 +1045,7 @@ Environment.NewLine;
                 throw new NotImplementedException();
             }
 
-            public HtmlString Hidden(string name, object value, object htmlAttributes)
+            public IHtmlContent Hidden(string name, object value, object htmlAttributes)
             {
                 return HelperName("__Hidden__", htmlAttributes);
             }
@@ -1052,12 +1055,12 @@ Environment.NewLine;
                 throw new NotImplementedException();
             }
 
-            public HtmlString Label(string expression, string labelText, object htmlAttributes)
+            public IHtmlContent Label(string expression, string labelText, object htmlAttributes)
             {
                 return HelperName("__Label__", htmlAttributes);
             }
 
-            public HtmlString ListBox(string name, IEnumerable<SelectListItem> selectList, object htmlAttributes)
+            public IHtmlContent ListBox(string name, IEnumerable<SelectListItem> selectList, object htmlAttributes)
             {
                 throw new NotImplementedException();
             }
@@ -1075,22 +1078,22 @@ Environment.NewLine;
                 throw new NotImplementedException();
             }
 
-            public HtmlString Password(string name, object value, object htmlAttributes)
+            public IHtmlContent Password(string name, object value, object htmlAttributes)
             {
                 return HelperName("__Password__", htmlAttributes);
             }
 
-            public HtmlString RadioButton(string name, object value, bool? isChecked, object htmlAttributes)
+            public IHtmlContent RadioButton(string name, object value, bool? isChecked, object htmlAttributes)
             {
                 return HelperName("__RadioButton__", htmlAttributes);
             }
 
-            public HtmlString Raw(object value)
+            public IHtmlContent Raw(object value)
             {
                 throw new NotImplementedException();
             }
 
-            public HtmlString Raw(string value)
+            public IHtmlContent Raw(string value)
             {
                 throw new NotImplementedException();
             }
@@ -1100,7 +1103,7 @@ Environment.NewLine;
                 throw new NotImplementedException();
             }
 
-            public HtmlString RouteLink(
+            public IHtmlContent RouteLink(
                 [NotNull] string linkText,
                 string routeName,
                 string protocol,
@@ -1112,22 +1115,22 @@ Environment.NewLine;
                 throw new NotImplementedException();
             }
 
-            public HtmlString TextArea(string name, string value, int rows, int columns, object htmlAttributes)
+            public IHtmlContent TextArea(string name, string value, int rows, int columns, object htmlAttributes)
             {
                 return HelperName("__TextArea__", htmlAttributes);
             }
 
-            public HtmlString TextBox(string name, object value, string format, object htmlAttributes)
+            public IHtmlContent TextBox(string name, object value, string format, object htmlAttributes)
             {
                 return HelperName("__TextBox__", htmlAttributes);
             }
 
-            public HtmlString ValidationMessage(string modelName, string message, object htmlAttributes, string tag)
+            public IHtmlContent ValidationMessage(string modelName, string message, object htmlAttributes, string tag)
             {
                 return HelperName("__ValidationMessage__", htmlAttributes);
             }
 
-            public HtmlString ValidationSummary(
+            public IHtmlContent ValidationSummary(
                 bool excludePropertyErrors,
                 string message,
                 object htmlAttributes,
@@ -1141,14 +1144,14 @@ Environment.NewLine;
                 throw new NotImplementedException();
             }
 
-            private HtmlString HelperName(string name, object htmlAttributes)
+            private IHtmlContent HelperName(string name, object htmlAttributes)
             {
                 var htmlAttributesDictionary = HtmlHelper.AnonymousObjectToHtmlAttributes(htmlAttributes);
                 var htmlAttributesString =
                     string.Join(" ", htmlAttributesDictionary.Select(entry => $"{ entry.Key }='{ entry.Value }'"));
                 var helperName = $"{ name } { htmlAttributesString }";
 
-                return new HtmlString(helperName.TrimEnd());
+                return new StringHtmlContent(helperName.TrimEnd());
             }
         }
     }

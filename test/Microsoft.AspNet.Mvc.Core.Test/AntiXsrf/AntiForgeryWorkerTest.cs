@@ -155,9 +155,10 @@ namespace Microsoft.AspNet.Mvc.Core.Test
             var inputElement = worker.GetFormInputElement(context.HttpContext.Object);
 
             // Assert
+            inputElement.TagRenderMode = TagRenderMode.SelfClosing;
             Assert.Equal(@"<input name=""HtmlEncode[[form-field-name]]"" type=""HtmlEncode[[hidden]]"" " +
                 @"value=""HtmlEncode[[serialized-form-token]]"" />",
-                inputElement.ToString(TagRenderMode.SelfClosing));
+                DefaultTemplatesUtilities.HtmlContentToString(inputElement));
             context.TokenStore.Verify();
         }
 
@@ -186,9 +187,10 @@ namespace Microsoft.AspNet.Mvc.Core.Test
             var inputElement = worker.GetFormInputElement(context.HttpContext.Object);
 
             // Assert
+            inputElement.TagRenderMode = TagRenderMode.SelfClosing;
             Assert.Equal(@"<input name=""HtmlEncode[[form-field-name]]"" type=""HtmlEncode[[hidden]]"" " +
                 @"value=""HtmlEncode[[serialized-form-token]]"" />",
-                inputElement.ToString(TagRenderMode.SelfClosing));
+                DefaultTemplatesUtilities.HtmlContentToString(inputElement));
             context.TokenStore.Verify();
         }
 
@@ -209,9 +211,10 @@ namespace Microsoft.AspNet.Mvc.Core.Test
             var inputElement = worker.GetFormInputElement(context.HttpContext.Object);
 
             // Assert
+            inputElement.TagRenderMode = TagRenderMode.SelfClosing;
             Assert.Equal(@"<input name=""HtmlEncode[[form-field-name]]"" type=""HtmlEncode[[hidden]]"" " +
                 @"value=""HtmlEncode[[serialized-form-token]]"" />",
-                inputElement.ToString(TagRenderMode.SelfClosing));
+                DefaultTemplatesUtilities.HtmlContentToString(inputElement));
         }
 
         [Theory]

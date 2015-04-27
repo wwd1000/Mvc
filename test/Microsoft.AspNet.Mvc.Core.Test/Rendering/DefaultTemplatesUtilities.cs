@@ -8,6 +8,7 @@ using System.Globalization;
 using System.IO;
 using System.Threading.Tasks;
 using Microsoft.AspNet.DataProtection;
+using Microsoft.AspNet.HtmlContent;
 using Microsoft.AspNet.Http;
 using Microsoft.AspNet.Mvc.ModelBinding;
 using Microsoft.AspNet.Mvc.ModelBinding.Validation;
@@ -155,6 +156,15 @@ namespace Microsoft.AspNet.Mvc.Rendering
             viewData.Model = model;
 
             return GetHtmlHelper(viewData, urlHelper, viewEngine, provider, innerHelperWrapper, htmlGenerator: null);
+        }
+
+        public static string HtmlContentToString(IHtmlContent content)
+        {
+            using (var writer = new StringWriter())
+            {
+                content.WriteTo(writer, new CommonTestEncoder());
+                return writer.ToString();
+            }
         }
 
         private static HtmlHelper<TModel> GetHtmlHelper<TModel>(
