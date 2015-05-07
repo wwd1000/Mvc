@@ -560,7 +560,7 @@ namespace Microsoft.AspNet.Mvc.IntegrationTests
             var parameter = new ParameterDescriptor()
             {
                 Name = "parameter",
-                ParameterType = typeof(List<Person4>)
+                ParameterType = typeof(Person4)
             };
 
             var operationContext = ModelBindingTestHelper.GetOperationBindingContext(request =>
@@ -574,9 +574,9 @@ namespace Microsoft.AspNet.Mvc.IntegrationTests
             var modelBindingResult = await argumentBinder.BindModelAsync(parameter, modelState, operationContext);
 
             // Assert
-            Assert.NotNull(modelBindingResult);  // This fails due to #1579
-            Assert.False(modelBindingResult.IsModelSet);
-            Assert.Empty(Assert.IsType<List<Person2>>(modelBindingResult.Model));
+            Assert.NotNull(modelBindingResult);
+            Assert.True(modelBindingResult.IsModelSet);
+            Assert.IsType<Person4>(modelBindingResult.Model);
 
             Assert.Equal(0, modelState.Count);
             Assert.Equal(0, modelState.ErrorCount);
