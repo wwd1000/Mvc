@@ -379,7 +379,7 @@ namespace Microsoft.AspNet.Mvc.ModelBinding
         {
             var metadataProvider = bindingContext.OperationBindingContext.MetadataProvider;
             var modelExplorer = metadataProvider.GetModelExplorerForType(bindingContext.ModelType, bindingContext.Model);
-            var validationNode = new ModelValidationNode(bindingContext.ModelName, modelExplorer);
+            var validationNode = new ModelValidationNode(bindingContext.ModelName, bindingContext.ModelMetadata);
 
             var validationInfo = GetPropertyValidationInfo(bindingContext);
 

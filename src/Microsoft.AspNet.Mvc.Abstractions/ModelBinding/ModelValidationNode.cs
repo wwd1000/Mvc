@@ -8,20 +8,21 @@ namespace Microsoft.AspNet.Mvc.ModelBinding
 {
     public class ModelValidationNode
     {
-        public ModelValidationNode([NotNull] string key, ModelExplorer explorer) : this (key, explorer, new List<ModelValidationNode>())
+        public ModelValidationNode([NotNull] string key, [NotNull] ModelMetadata modelMetadata)
+            : this (key, modelMetadata, new List<ModelValidationNode>())
         {
         }
 
-        public ModelValidationNode([NotNull] string key, ModelExplorer explorer, [NotNull] IList<ModelValidationNode> childNodes)
+        public ModelValidationNode([NotNull] string key, ModelMetadata modelMetadata, [NotNull] IList<ModelValidationNode> childNodes)
         {
             Key = key;
-            ModelExplorer = explorer;
+            ModelMetadata = modelMetadata;
             ChildNodes = childNodes;
         }
 
         public string Key { get; set; }
 
-        public ModelExplorer ModelExplorer { get; set; }
+        public ModelMetadata ModelMetadata { get; set; }
 
         public IList<ModelValidationNode> ChildNodes { get; set; }
     }

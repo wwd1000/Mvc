@@ -122,15 +122,15 @@ namespace Microsoft.AspNet.Mvc.ModelBinding.Validation
             validationContext.Visited.Add(modelExplorer.Model);
 
             // Validate the children first - depth-first traversal
-            //var enumerableModel = modelExplorer.Model as IEnumerable;
-            //if (enumerableModel == null)
-            //{
-            isValid = ValidateProperties(modelKey, modelExplorer, validationContext);
-            //}
-            //else
-            //{
-            //    isValid = ValidateElements(modelKey, enumerableModel, validationContext);
-            //}
+            var enumerableModel = modelExplorer.Model as IEnumerable;
+            if (enumerableModel == null)
+            {
+                isValid = ValidateProperties(modelKey, modelExplorer, validationContext);
+            }
+            else
+            {
+                isValid = ValidateElements(modelKey, enumerableModel, validationContext);
+            }
 
             if (isValid)
             {
@@ -177,11 +177,14 @@ namespace Microsoft.AspNet.Mvc.ModelBinding.Validation
 
             foreach (var childNode in validationContext.RootValidationNode.ChildNodes)
             {
+                var childModelExplorer = childNode.ModelMetadata.MetadataKind == Metadata.ModelMetadataKind.Type ?
+                    modelExplorer :
+                    modelExplorer.GetExplorerForProperty(childNode.ModelMetadata.PropertyName);
                 var propertyValidationContext = new ValidationContext()
                 {
                     ModelValidationContext = ModelValidationContext.GetChildValidationContext(
                         validationContext.ModelValidationContext,
-                        childNode.ModelExplorer),
+                        modelExplorer.GetExplorerForProperty(childNode.ModelMetadata.PropertyName)),
                     Visited = validationContext.Visited,
                     RootValidationNode = childNode
                 };
@@ -268,6 +271,48 @@ namespace Microsoft.AspNet.Mvc.ModelBinding.Validation
             }
 
             return isValid;
+
+            //var elementType = GetElementType(model.GetType());
+            //var elementMetadata = _modelMetadataProvider.GetMetadataForType(elementType);
+
+            //var validatorProvider = validationContext.ModelValidationContext.ValidatorProvider;
+            //var validatorProviderContext = new ModelValidatorProviderContext(elementMetadata);
+            //validatorProvider.GetValidators(validatorProviderContext);
+
+            //var validators = validatorProviderContext.Validators;
+
+            //// If there are no validators or the object is null we bail out quickly
+            //// when there are large arrays of null, this will save a significant amount of processing
+            //// with minimal impact to other scenarios.
+            //var anyValidatorsDefined = validators.Any();
+            //var index = 0;
+            //var isValid = true;
+            //foreach (var element in model)
+            //{
+            //    // If the element is non null, the recursive calls might find more validators.
+            //    // If it's null, then a shallow validation will be performed.
+            //    if (element != null || anyValidatorsDefined)
+            //    {
+            //        var elementExplorer = new ModelExplorer(_modelMetadataProvider, elementMetadata, element);
+            //        var elementKey = ModelNames.CreateIndexModelName(currentKey, index);
+            //        var elementValidationContext = new ValidationContext()
+            //        {
+            //            ModelValidationContext = ModelValidationContext.GetChildValidationContext(
+            //                validationContext.ModelValidationContext,
+            //                elementExplorer),
+            //            Visited = validationContext.Visited
+            //        };
+
+            //        if (!ValidateNonVisitedNodeAndChildren(elementKey, elementValidationContext, validators))
+            //        {
+            //            isValid = false;
+            //        }
+            //    }
+
+            //    index++;
+            //}
+
+            //return isValid;
         }
 
         // Validates a single node (not including children)

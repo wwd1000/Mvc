@@ -60,10 +60,10 @@ namespace Microsoft.AspNet.Mvc.ModelBinding
         {
             get
             {
-                if (_validationNode == null)
-                {
-                    //_validationNode = new ModelValidationNode(Key, );
-                }
+                //if (_validationNode == null)
+                //{
+                //    _validationNode = new ModelValidationNode(Key, null);
+                //}
 
                 return _validationNode;
             }

@@ -39,10 +39,11 @@ namespace Microsoft.AspNet.Mvc.ModelBinding
             }
             else
             {
-                boundCollection = await BindSimpleCollection(
+                result = await BindSimpleCollection(
                     bindingContext,
                     valueProviderResult.RawValue,
                     valueProviderResult.Culture);
+                boundCollection = result.Model;
             }
 
             var model = bindingContext.Model;
@@ -65,7 +66,7 @@ namespace Microsoft.AspNet.Mvc.ModelBinding
 
         // Used when the ValueProvider contains the collection to be bound as a single element, e.g. the raw value
         // is [ "1", "2" ] and needs to be converted to an int[].
-        internal async Task<IEnumerable<TElement>> BindSimpleCollection(
+        internal async Task<CollectionResult> BindSimpleCollection(
             ModelBindingContext bindingContext,
             object rawValue,
             CultureInfo culture)
@@ -80,6 +81,7 @@ namespace Microsoft.AspNet.Mvc.ModelBinding
             var metadataProvider = bindingContext.OperationBindingContext.MetadataProvider;
             var elementMetadata = metadataProvider.GetMetadataForType(typeof(TElement));
 
+            var validationNode = new ModelValidationNode(bindingContext.ModelName, bindingContext.ModelMetadata);
             var rawValueArray = RawValueToObjectArray(rawValue);
             foreach (var rawValueElement in rawValueArray)
             {
@@ -100,11 +102,19 @@ namespace Microsoft.AspNet.Mvc.ModelBinding
                 if (result != null)
                 {
                     boundValue = result.Model;
+                    if (result.ValidationNode != null)
+                    {
+                        validationNode.ChildNodes.Add(result.ValidationNode);
+                    }
                 }
                 boundCollection.Add(ModelBindingHelper.CastOrDefault<TElement>(boundValue));
             }
 
-            return boundCollection;
+            return new CollectionResult
+            {
+                ValidationNode = validationNode,
+                Model = boundCollection
+            };
         }
 
         // Used when the ValueProvider contains the collection to be bound as multiple elements, e.g. foo[0], foo[1].
@@ -136,9 +146,8 @@ namespace Microsoft.AspNet.Mvc.ModelBinding
             var metadataProvider = bindingContext.OperationBindingContext.MetadataProvider;
             var elementMetadata = metadataProvider.GetMetadataForType(typeof(TElement));
 
-            var modelExplorer = new ModelExplorer(metadataProvider, bindingContext.ModelMetadata, bindingContext.Model);
             var boundCollection = new List<TElement>();
-            var validationNode = new ModelValidationNode(bindingContext.ModelName, modelExplorer);
+            var validationNode = new ModelValidationNode(bindingContext.ModelName, bindingContext.ModelMetadata);
             foreach (var indexName in indexNames)
             {
                 var fullChildName = ModelNames.CreateIndexModelName(bindingContext.ModelName, indexName);
