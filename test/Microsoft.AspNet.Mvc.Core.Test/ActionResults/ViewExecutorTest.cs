@@ -4,6 +4,7 @@
 using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Text;
 using System.Threading.Tasks;
 using Microsoft.AspNet.Http.Internal;
 using Microsoft.AspNet.Mvc.ModelBinding;
@@ -90,16 +91,7 @@ namespace Microsoft.AspNet.Mvc
             get
             {
                 yield return new object[] { 30, 0 };
-
-                if (TestPlatformHelper.IsMono)
-                {
-                    // The StreamWriter in Mono buffers 2x the buffer size before flushing.
-                    yield return new object[] { ViewResultStreamWriterBufferSize * 2 + 30, ViewResultStreamWriterBufferSize };
-                }
-                else
-                {
-                    yield return new object[] { ViewResultStreamWriterBufferSize + 30, ViewResultStreamWriterBufferSize };
-                }
+                yield return new object[] { ViewResultStreamWriterBufferSize + 30, ViewResultStreamWriterBufferSize };
             }
         }
 

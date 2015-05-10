@@ -10,6 +10,7 @@ using System.Threading.Tasks;
 using System.Xml;
 using Microsoft.AspNet.Http;
 using Microsoft.AspNet.Http.Internal;
+using Microsoft.AspNet.Testing;
 using Microsoft.Net.Http.Headers;
 using Moq;
 using Xunit;
@@ -94,6 +95,12 @@ namespace Microsoft.AspNet.Mvc.Xml
         [MemberData(nameof(BasicTypeValues))]
         public async Task WriteAsync_CanWriteBasicTypes(object input, string expectedOutput)
         {
+            if (TestPlatformHelper.IsMono)
+            {
+                // Mono issue - https://github.com/aspnet/External/issues/18
+                return;
+            }
+            
             // Arrange
             var formatter = new XmlDataContractSerializerOutputFormatter();
             var outputFormatterContext = GetOutputFormatterContext(input, typeof(object));
@@ -112,7 +119,13 @@ namespace Microsoft.AspNet.Mvc.Xml
 
         [Fact]
         public void XmlDataContractSerializer_CachesSerializerForType()
-        {
+        {   
+            if (TestPlatformHelper.IsMono)
+            {
+                // Mono issue - https://github.com/aspnet/External/issues/18
+                return;
+            }
+            
             // Arrange
             var input = new DummyClass { SampleInt = 10 };
             var formatter = new TestXmlDataContractSerializerOutputFormatter();
@@ -129,6 +142,12 @@ namespace Microsoft.AspNet.Mvc.Xml
         [Fact]
         public void DefaultConstructor_ExpectedWriterSettings_Created()
         {
+            if (TestPlatformHelper.IsMono)
+            {
+                // Mono issue - https://github.com/aspnet/External/issues/18
+                return;
+            }
+            
             // Arrange and Act
             var formatter = new XmlDataContractSerializerOutputFormatter();
 
@@ -143,6 +162,12 @@ namespace Microsoft.AspNet.Mvc.Xml
         [Fact]
         public async Task SuppliedWriterSettings_TakeAffect()
         {
+            if (TestPlatformHelper.IsMono)
+            {
+                // Mono issue - https://github.com/aspnet/External/issues/18
+                return;
+            }
+            
             // Arrange
             var writerSettings = FormattingUtilities.GetDefaultXmlWriterSettings();
             writerSettings.OmitXmlDeclaration = false;
@@ -168,6 +193,12 @@ namespace Microsoft.AspNet.Mvc.Xml
         [Fact]
         public async Task WriteAsync_WritesSimpleTypes()
         {
+            if (TestPlatformHelper.IsMono)
+            {
+                // Mono issue - https://github.com/aspnet/External/issues/18
+                return;
+            }
+            
             // Arrange
             var sampleInput = new DummyClass { SampleInt = 10 };
             var formatter = new XmlDataContractSerializerOutputFormatter();
@@ -188,6 +219,12 @@ namespace Microsoft.AspNet.Mvc.Xml
         [Fact]
         public async Task WriteAsync_WritesComplexTypes()
         {
+            if (TestPlatformHelper.IsMono)
+            {
+                // Mono issue - https://github.com/aspnet/External/issues/18
+                return;
+            }
+            
             // Arrange
             var sampleInput = new TestLevelTwo
             {
@@ -218,6 +255,12 @@ namespace Microsoft.AspNet.Mvc.Xml
         [Fact]
         public async Task WriteAsync_WritesOnModifiedWriterSettings()
         {
+            if (TestPlatformHelper.IsMono)
+            {
+                // Mono issue - https://github.com/aspnet/External/issues/18
+                return;
+            }
+            
             // Arrange
             var sampleInput = new DummyClass { SampleInt = 10 };
             var outputFormatterContext = GetOutputFormatterContext(sampleInput, sampleInput.GetType());
@@ -244,6 +287,12 @@ namespace Microsoft.AspNet.Mvc.Xml
         [Fact]
         public async Task WriteAsync_WritesUTF16Output()
         {
+            if (TestPlatformHelper.IsMono)
+            {
+                // Mono issue - https://github.com/aspnet/External/issues/18
+                return;
+            }
+            
             // Arrange
             var sampleInput = new DummyClass { SampleInt = 10 };
             var outputFormatterContext = GetOutputFormatterContext(sampleInput, sampleInput.GetType(),
@@ -267,6 +316,12 @@ namespace Microsoft.AspNet.Mvc.Xml
         [Fact]
         public async Task WriteAsync_WritesIndentedOutput()
         {
+            if (TestPlatformHelper.IsMono)
+            {
+                // Mono issue - https://github.com/aspnet/External/issues/18
+                return;
+            }
+            
             // Arrange
             var sampleInput = new DummyClass { SampleInt = 10 };
             var formatter = new XmlDataContractSerializerOutputFormatter();
@@ -289,6 +344,12 @@ namespace Microsoft.AspNet.Mvc.Xml
         [Fact]
         public async Task WriteAsync_VerifyBodyIsNotClosedAfterOutputIsWritten()
         {
+            if (TestPlatformHelper.IsMono)
+            {
+                // Mono issue - https://github.com/aspnet/External/issues/18
+                return;
+            }
+            
             // Arrange
             var sampleInput = new DummyClass { SampleInt = 10 };
             var formatter = new XmlDataContractSerializerOutputFormatter();
@@ -305,6 +366,12 @@ namespace Microsoft.AspNet.Mvc.Xml
         [Fact]
         public async Task WriteAsync_DoesntFlushOutputStream()
         {
+            if (TestPlatformHelper.IsMono)
+            {
+                // Mono issue - https://github.com/aspnet/External/issues/18
+                return;
+            }
+            
             // Arrange
             var sampleInput = new DummyClass { SampleInt = 10 };
             var formatter = new XmlDataContractSerializerOutputFormatter();
@@ -337,6 +404,12 @@ namespace Microsoft.AspNet.Mvc.Xml
         [MemberData(nameof(TypesForCanWriteResult))]
         public void CanWriteResult_ReturnsExpectedOutput(object input, Type declaredType, bool expectedOutput)
         {
+            if (TestPlatformHelper.IsMono)
+            {
+                // Mono issue - https://github.com/aspnet/External/issues/18
+                return;
+            }
+            
             // Arrange
             var formatter = new XmlDataContractSerializerOutputFormatter();
             var outputFormatterContext = GetOutputFormatterContext(input, declaredType);
@@ -366,6 +439,12 @@ namespace Microsoft.AspNet.Mvc.Xml
         public void GetSupportedContentTypes_ReturnsSupportedTypes(Type declaredType,
             Type runtimeType, object expectedOutput)
         {
+            if (TestPlatformHelper.IsMono)
+            {
+                // Mono issue - https://github.com/aspnet/External/issues/18
+                return;
+            }
+            
             // Arrange
             var formatter = new XmlDataContractSerializerOutputFormatter();
 
@@ -387,6 +466,12 @@ namespace Microsoft.AspNet.Mvc.Xml
         [Fact]
         public async Task WriteAsync_ThrowsWhenNotConfiguredWithKnownTypes()
         {
+            if (TestPlatformHelper.IsMono)
+            {
+                // Mono issue - https://github.com/aspnet/External/issues/18
+                return;
+            }
+            
             // Arrange
             var sampleInput = new SomeDummyClass { SampleInt = 1, SampleString = "TestString" };
             var formatter = new XmlDataContractSerializerOutputFormatter();
@@ -400,6 +485,12 @@ namespace Microsoft.AspNet.Mvc.Xml
         [Fact]
         public async Task WriteAsync_ThrowsWhenNotConfiguredWithPreserveReferences()
         {
+            if (TestPlatformHelper.IsMono)
+            {
+                // Mono issue - https://github.com/aspnet/External/issues/18
+                return;
+            }
+            
             // Arrange
             var child = new Child { Id = 1 };
             var parent = new Parent { Name = "Parent", Children = new List<Child> { child } };
@@ -416,6 +507,12 @@ namespace Microsoft.AspNet.Mvc.Xml
         [Fact]
         public async Task WriteAsync_WritesWhenConfiguredWithRootName()
         {
+            if (TestPlatformHelper.IsMono)
+            {
+                // Mono issue - https://github.com/aspnet/External/issues/18
+                return;
+            }
+            
             // Arrange
             var sampleInt = 10;
             var SubstituteRootName = "SomeOtherClass";
@@ -457,6 +554,12 @@ namespace Microsoft.AspNet.Mvc.Xml
         [Fact]
         public async Task WriteAsync_WritesWhenConfiguredWithKnownTypes()
         {
+            if (TestPlatformHelper.IsMono)
+            {
+                // Mono issue - https://github.com/aspnet/External/issues/18
+                return;
+            }
+            
             // Arrange
             var sampleInt = 10;
             var sampleString = "TestString";
@@ -501,6 +604,12 @@ namespace Microsoft.AspNet.Mvc.Xml
         [Fact]
         public async Task WriteAsync_WritesWhenConfiguredWithPreserveReferences()
         {
+            if (TestPlatformHelper.IsMono)
+            {
+                // Mono issue - https://github.com/aspnet/External/issues/18
+                return;
+            }
+            
             // Arrange
             var sampleId = 1;
             var sampleName = "Parent";

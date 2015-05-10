@@ -7,6 +7,7 @@ using System.ComponentModel.DataAnnotations;
 using System.Globalization;
 using Microsoft.AspNet.Mvc.ModelBinding;
 using Microsoft.AspNet.Routing;
+using Microsoft.AspNet.Testing;
 using Xunit;
 
 namespace Microsoft.AspNet.Mvc.Rendering
@@ -113,9 +114,14 @@ namespace Microsoft.AspNet.Mvc.Rendering
         public void CheckBoxGeneratesUnobtrusiveValidationAttributes()
         {
             // Arrange
-            var expected = @"<input data-val=""HtmlEncode[[true]]"" data-val-required=""HtmlEncode[[The Name field is required.]]"" id=""HtmlEncode[[Name]]""" +
-                           @" name=""HtmlEncode[[Name]]"" type=""HtmlEncode[[checkbox]]"" value=""HtmlEncode[[true]]"" />" +
-                           @"<input name=""HtmlEncode[[Name]]"" type=""HtmlEncode[[hidden]]"" value=""HtmlEncode[[false]]"" />";
+            // Mono issue - https://github.com/aspnet/External/issues/19
+            var expected = TestPlatformHelper.IsMono ?
+                @"<input data-val=""HtmlEncode[[true]]"" data-val-required=""HtmlEncode[[RequiredAttribute_ValidationError]]"" id=""HtmlEncode[[Name]]""" +
+                @" name=""HtmlEncode[[Name]]"" type=""HtmlEncode[[checkbox]]"" value=""HtmlEncode[[true]]"" />" +
+                @"<input name=""HtmlEncode[[Name]]"" type=""HtmlEncode[[hidden]]"" value=""HtmlEncode[[false]]"" />" :
+                @"<input data-val=""HtmlEncode[[true]]"" data-val-required=""HtmlEncode[[The Name field is required.]]"" id=""HtmlEncode[[Name]]""" +
+                @" name=""HtmlEncode[[Name]]"" type=""HtmlEncode[[checkbox]]"" value=""HtmlEncode[[true]]"" />" +
+                @"<input name=""HtmlEncode[[Name]]"" type=""HtmlEncode[[hidden]]"" value=""HtmlEncode[[false]]"" />";
             var helper = DefaultTemplatesUtilities.GetHtmlHelper(GetModelWithValidationViewData());
 
             // Act
@@ -275,9 +281,14 @@ namespace Microsoft.AspNet.Mvc.Rendering
         public void CheckBoxForGeneratesUnobtrusiveValidationAttributes()
         {
             // Arrange
-            var expected = @"<input data-val=""HtmlEncode[[true]]"" data-val-required=""HtmlEncode[[The Name field is required.]]"" id=""HtmlEncode[[Name]]""" +
-                           @" name=""HtmlEncode[[Name]]"" type=""HtmlEncode[[checkbox]]"" value=""HtmlEncode[[true]]"" />" +
-                           @"<input name=""HtmlEncode[[Name]]"" type=""HtmlEncode[[hidden]]"" value=""HtmlEncode[[false]]"" />";
+            // Mono issue - https://github.com/aspnet/External/issues/19
+            var expected = TestPlatformHelper.IsMono ?
+                @"<input data-val=""HtmlEncode[[true]]"" data-val-required=""HtmlEncode[[RequiredAttribute_ValidationError]]"" id=""HtmlEncode[[Name]]""" +
+                @" name=""HtmlEncode[[Name]]"" type=""HtmlEncode[[checkbox]]"" value=""HtmlEncode[[true]]"" />" +
+                @"<input name=""HtmlEncode[[Name]]"" type=""HtmlEncode[[hidden]]"" value=""HtmlEncode[[false]]"" />" :
+                @"<input data-val=""HtmlEncode[[true]]"" data-val-required=""HtmlEncode[[The Name field is required.]]"" id=""HtmlEncode[[Name]]""" +
+                @" name=""HtmlEncode[[Name]]"" type=""HtmlEncode[[checkbox]]"" value=""HtmlEncode[[true]]"" />" +
+                @"<input name=""HtmlEncode[[Name]]"" type=""HtmlEncode[[hidden]]"" value=""HtmlEncode[[false]]"" />";
             var metadataProvider = TestModelMetadataProvider.CreateDefaultProvider();
             var viewDataDictionary = new ViewDataDictionary<ModelWithValidation>(metadataProvider)
             {

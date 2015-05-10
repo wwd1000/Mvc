@@ -8,6 +8,7 @@ using System.Text;
 using System.Threading.Tasks;
 using Microsoft.AspNet.Http;
 using Microsoft.AspNet.Mvc.ModelBinding;
+using Microsoft.AspNet.Testing;
 using Microsoft.Framework.DependencyInjection;
 using Xunit;
 
@@ -67,7 +68,10 @@ namespace Microsoft.AspNet.Mvc.IntegrationTests
             Assert.Equal("CustomParameter.Address", key);
             Assert.False(modelState.IsValid);
             var error = Assert.Single(modelState[key].Errors);
-            Assert.Equal("The Address field is required.", error.ErrorMessage);
+            // Mono issue - https://github.com/aspnet/External/issues/19
+            Assert.Equal(TestPlatformHelper.IsMono ?
+                "RequiredAttribute_ValidationError" :
+                "The Address field is required.", error.ErrorMessage);
         }
 
         [Fact]
@@ -108,7 +112,10 @@ namespace Microsoft.AspNet.Mvc.IntegrationTests
             Assert.Equal("Address", key);
             Assert.False(modelState.IsValid);
             var error = Assert.Single(modelState[key].Errors);
-            Assert.Equal("The Address field is required.",error.ErrorMessage);
+            // Mono issue - https://github.com/aspnet/External/issues/19
+            Assert.Equal(TestPlatformHelper.IsMono ?
+                "RequiredAttribute_ValidationError" :
+                "The Address field is required.",error.ErrorMessage);
         }
 
         private class Person4
@@ -218,7 +225,10 @@ namespace Microsoft.AspNet.Mvc.IntegrationTests
             var street = Assert.Single(modelState.Keys, k => k == "CustomParameter.Address.Street");
             Assert.Equal(ModelValidationState.Invalid, modelState[street].ValidationState);
             var error = Assert.Single(modelState[street].Errors);
-            Assert.Equal("The Street field is required.", error.ErrorMessage);
+            // Mono issue - https://github.com/aspnet/External/issues/19
+            Assert.Equal(TestPlatformHelper.IsMono ?
+                "RequiredAttribute_ValidationError" :
+                "The Street field is required.", error.ErrorMessage);
         }
 
         private class Person3

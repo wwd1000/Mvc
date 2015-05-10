@@ -298,11 +298,9 @@ namespace Microsoft.AspNet.Mvc.Xml
         [Fact]
         public async Task ReadAsync_FallsbackToUTF8_WhenCharSet_NotInContentType()
         {
-            // Arrange
-            var expectedException = TestPlatformHelper.IsMono ? typeof(InvalidOperationException) :
-                                                                typeof(XmlException);
+            // Arrange                                          ;
             var expectedMessage = TestPlatformHelper.IsMono ?
-                "There is an error in XML document." :
+                "Name cannot begin with the '.' character, hexadecimal value 0x00. Line 1, position 2." :
                 "The expected encoding 'utf-8' does not match the actual encoding 'utf-16LE'.";
 
             var inpStart = Encodings.UTF16EncodingLittleEndian.GetBytes("<?xml version=\"1.0\" encoding=\"UTF-16\"?>" +
@@ -319,7 +317,16 @@ namespace Microsoft.AspNet.Mvc.Xml
             var context = GetInputFormatterContext(contentBytes, typeof(TestLevelTwo));
 
             // Act and Assert
-            var ex = await Assert.ThrowsAsync(expectedException, () => formatter.ReadAsync(context));
+            Exception ex;
+            if (TestPlatformHelper.IsMono)
+            {
+                ex = await Assert.ThrowsAsync(typeof(XmlException), () => formatter.ReadAsync(context));;
+            }
+            else
+            {
+                ex = await Assert.ThrowsAsync(typeof(InvalidOperationException), () => formatter.ReadAsync(context));;
+            }
+            
             Assert.Equal(expectedMessage, ex.Message);
         }
 
@@ -327,10 +334,8 @@ namespace Microsoft.AspNet.Mvc.Xml
         public async Task ReadAsync_UsesContentTypeCharSet_ToReadStream()
         {
             // Arrange
-            var expectedException = TestPlatformHelper.IsMono ? typeof(InvalidOperationException) :
-                                                                typeof(XmlException);
             var expectedMessage = TestPlatformHelper.IsMono ?
-                "There is an error in XML document." :
+                "Data at the root level is invalid. Line 1, position 1." :
                 "The expected encoding 'utf-16LE' does not match the actual encoding 'utf-8'.";
 
             var inputBytes = Encodings.UTF8EncodingWithoutBOM.GetBytes("<?xml version=\"1.0\" encoding=\"UTF-8\"?>" +
@@ -341,7 +346,16 @@ namespace Microsoft.AspNet.Mvc.Xml
             var context = new InputFormatterContext(actionContext, typeof(TestLevelOne));
 
             // Act and Assert
-            var ex = await Assert.ThrowsAsync(expectedException, () => formatter.ReadAsync(context));
+            Exception ex;
+            if (TestPlatformHelper.IsMono)
+            {
+                ex = await Assert.ThrowsAsync(typeof(XmlException), () => formatter.ReadAsync(context));
+            }
+            else
+            {
+                ex = await Assert.ThrowsAsync(typeof(InvalidOperationException), () => formatter.ReadAsync(context));
+            }
+
             Assert.Equal(expectedMessage, ex.Message);
         }
 

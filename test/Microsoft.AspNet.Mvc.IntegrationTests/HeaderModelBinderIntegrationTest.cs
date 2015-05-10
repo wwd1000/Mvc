@@ -7,6 +7,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNet.Http;
 using Microsoft.AspNet.Mvc.ModelBinding;
+using Microsoft.AspNet.Testing;
 using Xunit;
 
 namespace Microsoft.AspNet.Mvc.IntegrationTests
@@ -62,7 +63,10 @@ namespace Microsoft.AspNet.Mvc.IntegrationTests
             var key = Assert.Single(modelState.Keys);
             Assert.Equal("CustomParameter.Address.Header", key);
             var error = Assert.Single(modelState[key].Errors);
-            Assert.Equal("The Street field is required.", error.ErrorMessage);
+            // Mono issue - https://github.com/aspnet/External/issues/19
+            Assert.Equal(TestPlatformHelper.IsMono ?
+                "RequiredAttribute_ValidationError" :
+                "The Street field is required.", error.ErrorMessage);
         }
 
         [Fact(Skip = "ModelState.Value not set due to #2445")]

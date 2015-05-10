@@ -8,6 +8,7 @@ using System.Text;
 using System.Xml;
 using Microsoft.AspNet.Mvc.ModelBinding;
 using Microsoft.AspNet.Mvc.Xml;
+using Microsoft.AspNet.Testing;
 using Xunit;
 
 namespace Microsoft.AspNet.Mvc
@@ -81,6 +82,12 @@ namespace Microsoft.AspNet.Mvc
             modelState.AddModelError("key2", "Test Error 3");
             var serializableError = new SerializableError(modelState);
             var outputStream = new MemoryStream();
+            var expectedMessage = TestPlatformHelper.IsMono ?
+                "<?xml version=\"1.0\" encoding=\"utf-8\"?><Error xmlns:i=" +
+                "\"http://www.w3.org/2001/XMLSchema-instance\"><key1>" +
+                "Test Error 1 Test Error 2</key1><key2>Test Error 3</key2></Error>" :
+                "<?xml version=\"1.0\" encoding=\"utf-8\"?>" +
+                "<Error><key1>Test Error 1 Test Error 2</key1><key2>Test Error 3</key2></Error>";
 
             // Act
             using (var xmlWriter = XmlWriter.Create(outputStream))
@@ -92,8 +99,7 @@ namespace Microsoft.AspNet.Mvc
             var res = new StreamReader(outputStream, Encoding.UTF8).ReadToEnd();
 
             // Assert
-            Assert.Equal("<?xml version=\"1.0\" encoding=\"utf-8\"?>" +
-                "<Error><key1>Test Error 1 Test Error 2</key1><key2>Test Error 3</key2></Error>", res);
+            Assert.Equal(expectedMessage, res);
         }
     }
 }

@@ -10,6 +10,7 @@ using Microsoft.AspNet.Hosting;
 using Microsoft.AspNet.Http.Features;
 using Microsoft.AspNet.Http.Internal;
 using Microsoft.AspNet.Routing;
+using Microsoft.AspNet.Testing;
 using Microsoft.Framework.DependencyInjection;
 using Microsoft.Net.Http.Headers;
 using Moq;
@@ -22,6 +23,12 @@ namespace Microsoft.AspNet.Mvc
         [Fact]
         public void Constructor_SetsFileName()
         {
+            if (TestPlatformHelper.IsMono)
+            {
+                // PhysicalFileProvider does not handle *nix system file paths.
+                return;
+            }
+
             // Arrange & Act
             var path = Path.GetFullPath("helllo.txt");
             var result = new FilePathResult(path, "text/plain");
@@ -33,6 +40,12 @@ namespace Microsoft.AspNet.Mvc
         [Fact]
         public async Task ExecuteResultAsync_FallsbackToStreamCopy_IfNoIHttpSendFilePresent()
         {
+            if (TestPlatformHelper.IsMono)
+            {
+                // PhysicalFileProvider does not handle *nix system file paths.
+                return;
+            }
+
             // Arrange
             var path = Path.GetFullPath(Path.Combine("TestFiles", "FilePathResultTestFile.txt"));
 
@@ -59,6 +72,12 @@ namespace Microsoft.AspNet.Mvc
         [Fact]
         public async Task ExecuteResultAsync_FallsBackToThePhysicalFileProvider_IfNoFileProviderIsPresent()
         {
+            if (TestPlatformHelper.IsMono)
+            {
+                // PhysicalFileProvider does not handle *nix system file paths.
+                return;
+            }
+
             // Arrange
             var path = Path.Combine("TestFiles", "FilePathResultTestFile.txt");
             var result = new FilePathResult(path, "text/plain");
@@ -88,6 +107,12 @@ namespace Microsoft.AspNet.Mvc
         [Fact]
         public async Task ExecuteResultAsync_CallsSendFileAsync_IfIHttpSendFilePresent()
         {
+            if (TestPlatformHelper.IsMono)
+            {
+                // PhysicalFileProvider does not handle *nix system file paths.
+                return;
+            }
+
             // Arrange
             var path = Path.GetFullPath(Path.Combine("TestFiles", "FilePathResultTestFile.txt"));
 
@@ -116,6 +141,12 @@ namespace Microsoft.AspNet.Mvc
         [Fact]
         public async Task ExecuteResultAsync_SetsSuppliedContentTypeAndEncoding()
         {
+            if (TestPlatformHelper.IsMono)
+            {
+                // PhysicalFileProvider does not handle *nix system file paths.
+                return;
+            }
+
             // Arrange
             var expectedContentType = "text/foo; charset=us-ascii";
             // path will be C:/.../TestFiles/FilePathResultTestFile_ASCII.txt
@@ -146,6 +177,12 @@ namespace Microsoft.AspNet.Mvc
         [Fact]
         public async Task ExecuteResultAsync_WorksWithAbsolutePaths_UsingBackSlash()
         {
+            if (TestPlatformHelper.IsMono)
+            {
+                // PhysicalFileProvider does not handle *nix system file paths.
+                return;
+            }
+
             // Arrange
             // path will be C:\...\TestFiles\FilePathResultTestFile.txt
             var path = Path.GetFullPath(Path.Combine(".", "TestFiles", "FilePathResultTestFile.txt"));
@@ -177,6 +214,12 @@ namespace Microsoft.AspNet.Mvc
         [Fact]
         public async Task ExecuteResultAsync_WorksWithAbsolutePaths_UsingForwardSlash()
         {
+            if (TestPlatformHelper.IsMono)
+            {
+                // PhysicalFileProvider does not handle *nix system file paths.
+                return;
+            }
+
             // Arrange
             // path will be C:/.../TestFiles/FilePathResultTestFile.txt
             var path = Path.GetFullPath(Path.Combine(".", "TestFiles", "FilePathResultTestFile.txt"));
@@ -206,6 +249,12 @@ namespace Microsoft.AspNet.Mvc
         [Fact]
         public async Task ExecuteResultAsync_WorksWithNonDiskBasedFiles()
         {
+            if (TestPlatformHelper.IsMono)
+            {
+                // PhysicalFileProvider does not handle *nix system file paths.
+                return;
+            }
+
             // Arrange
             var httpContext = new DefaultHttpContext();
             httpContext.Response.Body = new MemoryStream();
@@ -441,6 +490,12 @@ namespace Microsoft.AspNet.Mvc
         [InlineData("//NetworkLocation/Folder/SubFolder/File.txt")]
         public void IsPathRooted_ReturnsTrue_ForAbsolutePaths(string path)
         {
+            if (TestPlatformHelper.IsMono)
+            {
+                // PhysicalFileProvider does not handle *nix system file paths.
+                return;
+            }
+            
             // Arrange
             var fileResult = new FilePathResult(path, "text/plain")
             {

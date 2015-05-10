@@ -75,6 +75,12 @@ namespace Microsoft.AspNet.Mvc.Xml
         [InlineData("invalid", false)]
         public void CanRead_ReturnsTrueForAnySupportedContentType(string requestContentType, bool expectedCanRead)
         {
+            if (TestPlatformHelper.IsMono)
+            {
+                // Mono issue - https://github.com/aspnet/External/issues/18
+                return;
+            }
+
             // Arrange
             var formatter = new XmlDataContractSerializerInputFormatter();
             var contentBytes = Encoding.UTF8.GetBytes("content");
@@ -92,6 +98,12 @@ namespace Microsoft.AspNet.Mvc.Xml
         [Fact]
         public void XmlDataContractSerializer_CachesSerializerForType()
         {
+            if (TestPlatformHelper.IsMono)
+            {
+                // Mono issue - https://github.com/aspnet/External/issues/18
+                return;
+            }
+            
             // Arrange
             var input = "<?xml version=\"1.0\" encoding=\"UTF-8\"?>" +
                 "<DummyClass><SampleInt>10</SampleInt></DummyClass>";
@@ -110,6 +122,12 @@ namespace Microsoft.AspNet.Mvc.Xml
         [Fact]
         public void HasProperSuppportedMediaTypes()
         {
+            if (TestPlatformHelper.IsMono)
+            {
+                // Mono issue - https://github.com/aspnet/External/issues/18
+                return;
+            }
+
             // Arrange & Act
             var formatter = new XmlDataContractSerializerInputFormatter();
 
@@ -125,6 +143,12 @@ namespace Microsoft.AspNet.Mvc.Xml
         [Fact]
         public void HasProperSuppportedEncodings()
         {
+            if (TestPlatformHelper.IsMono)
+            {
+                // Mono issue - https://github.com/aspnet/External/issues/18
+                return;
+            }
+
             // Arrange & Act
             var formatter = new XmlDataContractSerializerInputFormatter();
 
@@ -136,6 +160,12 @@ namespace Microsoft.AspNet.Mvc.Xml
         [Fact]
         public async Task ReadAsync_ReadsSimpleTypes()
         {
+            if (TestPlatformHelper.IsMono)
+            {
+                // Mono issue - https://github.com/aspnet/External/issues/18
+                return;
+            }
+
             // Arrange
             var expectedInt = 10;
             var expectedString = "TestString";
@@ -163,6 +193,12 @@ namespace Microsoft.AspNet.Mvc.Xml
         [Fact]
         public async Task ReadAsync_ReadsComplexTypes()
         {
+            if (TestPlatformHelper.IsMono)
+            {
+                // Mono issue - https://github.com/aspnet/External/issues/18
+                return;
+            }
+
             // Arrange
             var expectedInt = 10;
             var expectedString = "TestString";
@@ -193,6 +229,12 @@ namespace Microsoft.AspNet.Mvc.Xml
         [Fact]
         public async Task ReadAsync_ReadsWhenMaxDepthIsModified()
         {
+            if (TestPlatformHelper.IsMono)
+            {
+                // Mono issue - https://github.com/aspnet/External/issues/18
+                return;
+            }
+
             // Arrange
             var expectedInt = 10;
 
@@ -219,6 +261,12 @@ namespace Microsoft.AspNet.Mvc.Xml
         {
             if (TestPlatformHelper.IsMono)
             {
+                // Mono issue - https://github.com/aspnet/External/issues/18
+                return;
+            }
+
+            if (TestPlatformHelper.IsMono)
+            {
                 // ReaderQuotas are not honored on Mono
                 return;
             }
@@ -242,6 +290,12 @@ namespace Microsoft.AspNet.Mvc.Xml
         {
             if (TestPlatformHelper.IsMono)
             {
+                // Mono issue - https://github.com/aspnet/External/issues/18
+                return;
+            }
+
+            if (TestPlatformHelper.IsMono)
+            {
                 // ReaderQuotas are not honored on Mono
                 return;
             }
@@ -263,6 +317,12 @@ namespace Microsoft.AspNet.Mvc.Xml
         [Fact]
         public void SetMaxDepth_ThrowsWhenMaxDepthIsBelowOne()
         {
+            if (TestPlatformHelper.IsMono)
+            {
+                // Mono issue - https://github.com/aspnet/External/issues/18
+                return;
+            }
+
             // Arrange
             var formatter = new XmlDataContractSerializerInputFormatter();
 
@@ -273,6 +333,12 @@ namespace Microsoft.AspNet.Mvc.Xml
         [Fact]
         public async Task ReadAsync_VerifyStreamIsOpenAfterRead()
         {
+            if (TestPlatformHelper.IsMono)
+            {
+                // Mono issue - https://github.com/aspnet/External/issues/18
+                return;
+            }
+
             // Arrange
             var input = "<?xml version=\"1.0\" encoding=\"UTF-8\"?>" +
                 "<DummyClass><SampleInt>10</SampleInt></DummyClass>";
@@ -291,6 +357,12 @@ namespace Microsoft.AspNet.Mvc.Xml
         [Fact]
         public async Task ReadAsync_FallsbackToUTF8_WhenCharSet_NotInContentType()
         {
+            if (TestPlatformHelper.IsMono)
+            {
+                // Mono issue - https://github.com/aspnet/External/issues/18
+                return;
+            }
+
             // Arrange
             var expectedException = TestPlatformHelper.IsMono ? typeof(SerializationException) :
                                                                 typeof(XmlException);
@@ -318,6 +390,12 @@ namespace Microsoft.AspNet.Mvc.Xml
         [Fact]
         public async Task ReadAsync_UsesContentTypeCharSet_ToReadStream()
         {
+            if (TestPlatformHelper.IsMono)
+            {
+                // Mono issue - https://github.com/aspnet/External/issues/18
+                return;
+            }
+
             // Arrange
             var expectedException = TestPlatformHelper.IsMono ? typeof(SerializationException) :
                                                                 typeof(XmlException);
@@ -339,6 +417,12 @@ namespace Microsoft.AspNet.Mvc.Xml
         [Fact]
         public async Task ReadAsync_IgnoresBOMCharacters()
         {
+            if (TestPlatformHelper.IsMono)
+            {
+                // Mono issue - https://github.com/aspnet/External/issues/18
+                return;
+            }
+
             // Arrange
             var sampleString = "Test";
             var sampleStringBytes = Encoding.UTF8.GetBytes(sampleString);
@@ -370,6 +454,12 @@ namespace Microsoft.AspNet.Mvc.Xml
         [Fact]
         public async Task ReadAsync_AcceptsUTF16Characters()
         {
+            if (TestPlatformHelper.IsMono)
+            {
+                // Mono issue - https://github.com/aspnet/External/issues/18
+                return;
+            }
+
             // Arrange
             var expectedInt = 10;
             var expectedString = "TestString";
@@ -399,6 +489,12 @@ namespace Microsoft.AspNet.Mvc.Xml
         [Fact]
         public async Task ReadAsync_ThrowsWhenNotConfiguredWithRootName()
         {
+            if (TestPlatformHelper.IsMono)
+            {
+                // Mono issue - https://github.com/aspnet/External/issues/18
+                return;
+            }
+
             // Arrange
             var SubstituteRootName = "SomeOtherClass";
             var SubstituteRootNamespace = "http://tempuri.org";
@@ -418,6 +514,12 @@ namespace Microsoft.AspNet.Mvc.Xml
         [Fact]
         public async Task ReadAsync_ReadsWhenConfiguredWithRootName()
         {
+            if (TestPlatformHelper.IsMono)
+            {
+                // Mono issue - https://github.com/aspnet/External/issues/18
+                return;
+            }
+
             // Arrange
             var expectedInt = 10;
             var SubstituteRootName = "SomeOtherClass";
@@ -454,6 +556,12 @@ namespace Microsoft.AspNet.Mvc.Xml
         [Fact]
         public async Task ReadAsync_ThrowsWhenNotConfiguredWithKnownTypes()
         {
+            if (TestPlatformHelper.IsMono)
+            {
+                // Mono issue - https://github.com/aspnet/External/issues/18
+                return;
+            }
+
             // Arrange
             var KnownTypeName = "SomeDummyClass";
             var InstanceNamespace = "http://www.w3.org/2001/XMLSchema-instance";
@@ -474,6 +582,12 @@ namespace Microsoft.AspNet.Mvc.Xml
         [Fact]
         public async Task ReadAsync_ReadsWhenConfiguredWithKnownTypes()
         {
+            if (TestPlatformHelper.IsMono)
+            {
+                // Mono issue - https://github.com/aspnet/External/issues/18
+                return;
+            }
+
             // Arrange
             var expectedInt = 10;
             var expectedString = "TestString";
@@ -511,6 +625,12 @@ namespace Microsoft.AspNet.Mvc.Xml
         [Fact]
         public async Task PostingListOfModels_HasRequiredAttributeValidationErrors()
         {
+            if (TestPlatformHelper.IsMono)
+            {
+                // Mono issue - https://github.com/aspnet/External/issues/18
+                return;
+            }
+            
             // Arrange
             var input = "<?xml version=\"1.0\" encoding=\"utf-8\"?><ArrayOfAddress " +
                         "xmlns=\"http://schemas.datacontract.org/2004/07/Microsoft.AspNet.Mvc.Xml\" " +
@@ -547,6 +667,12 @@ namespace Microsoft.AspNet.Mvc.Xml
         [Fact]
         public async Task PostingModel_HasRequiredAttributeValidationErrors()
         {
+            if (TestPlatformHelper.IsMono)
+            {
+                // Mono issue - https://github.com/aspnet/External/issues/18
+                return;
+            }
+            
             // Arrange
             var input = "<?xml version=\"1.0\" encoding=\"utf-8\"?>" +
                         "<Address xmlns=\"http://schemas.datacontract.org/2004/07/Microsoft.AspNet.Mvc.Xml\"" +
@@ -581,6 +707,12 @@ namespace Microsoft.AspNet.Mvc.Xml
         [Fact]
         public async Task PostingModelWithProperty_HasRequiredAttributeValidationErrors()
         {
+            if (TestPlatformHelper.IsMono)
+            {
+                // Mono issue - https://github.com/aspnet/External/issues/18
+                return;
+            }
+            
             // Arrange
             var input = "<?xml version=\"1.0\" encoding=\"utf-8\"?>" +
                 "<ModelWithPropertyHavingRequiredAttributeValidationErrors " +
@@ -617,6 +749,12 @@ namespace Microsoft.AspNet.Mvc.Xml
         [Fact]
         public async Task PostingModel_WithCollectionProperty_HasRequiredAttributeValidationErrors()
         {
+            if (TestPlatformHelper.IsMono)
+            {
+                // Mono issue - https://github.com/aspnet/External/issues/18
+                return;
+            }
+            
             // Arrange
             var input = "<?xml version=\"1.0\" encoding=\"utf-8\"?>" +
                 "<ModelWithCollectionPropertyHavingRequiredAttributeValidationErrors" +
@@ -654,6 +792,12 @@ namespace Microsoft.AspNet.Mvc.Xml
         [Fact]
         public async Task PostingModelInheritingType_HasRequiredAttributeValidationErrors()
         {
+            if (TestPlatformHelper.IsMono)
+            {
+                // Mono issue - https://github.com/aspnet/External/issues/18
+                return;
+            }
+            
             // Arrange
             var input = "<?xml version=\"1.0\" encoding=\"utf-8\"?>" +
                 "<ModelInheritingTypeHavingRequiredAttributeValidationErrors" +
@@ -690,6 +834,12 @@ namespace Microsoft.AspNet.Mvc.Xml
         [Fact]
         public async Task PostingModelHavingNullableValueTypes_NoRequiredAttributeValidationErrors()
         {
+            if (TestPlatformHelper.IsMono)
+            {
+                // Mono issue - https://github.com/aspnet/External/issues/18
+                return;
+            }
+            
             // Arrange
             var input = "<?xml version=\"1.0\" encoding=\"utf-8\"?><CarInfo " +
                 "xmlns=\"http://schemas.datacontract.org/2004/07/Microsoft.AspNet.Mvc.Xml\"" +
@@ -716,6 +866,12 @@ namespace Microsoft.AspNet.Mvc.Xml
         [Fact]
         public async Task PostingModel_WithPropertyHavingNullableValueTypes_NoRequiredAttributeValidationErrors()
         {
+            if (TestPlatformHelper.IsMono)
+            {
+                // Mono issue - https://github.com/aspnet/External/issues/18
+                return;
+            }
+            
             // Arrange
             var input = "<?xml version=\"1.0\" encoding=\"utf-8\"?>" +
                 "<ModelWithPropertyHavingTypeWithNullableProperties " +
@@ -751,6 +907,12 @@ namespace Microsoft.AspNet.Mvc.Xml
         [Fact]
         public async Task PostingModel_WithPropertySelfReferencingItself()
         {
+            if (TestPlatformHelper.IsMono)
+            {
+                // Mono issue - https://github.com/aspnet/External/issues/18
+                return;
+            }
+            
             // Arrange
             var input = "<Employee xmlns=\"http://schemas.datacontract.org/2004/07/Microsoft.AspNet.Mvc.Xml\"" +
                 " xmlns:i=\"http://www.w3.org/2001/XMLSchema-instance\"><Id>10</Id><Manager><Id>11</Id><Manager" +
@@ -794,6 +956,12 @@ namespace Microsoft.AspNet.Mvc.Xml
         [Fact]
         public async Task PostingModel_WithBothRequiredAndDataMemberRequired_NoValidationErrors()
         {
+            if (TestPlatformHelper.IsMono)
+            {
+                // Mono issue - https://github.com/aspnet/External/issues/18
+                return;
+            }
+            
             // Arrange
             var input = "<?xml version=\"1.0\" encoding=\"utf-8\"?>" +
                         "<Laptop xmlns=\"http://schemas.datacontract.org/2004/07/Microsoft.AspNet.Mvc.Xml\"" +
@@ -816,6 +984,12 @@ namespace Microsoft.AspNet.Mvc.Xml
         [Fact]
         public async Task PostingListofModels_WithBothRequiredAndDataMemberRequired_NoValidationErrors()
         {
+            if (TestPlatformHelper.IsMono)
+            {
+                // Mono issue - https://github.com/aspnet/External/issues/18
+                return;
+            }
+            
             // Arrange
             var input = "<?xml version=\"1.0\" encoding=\"utf-8\"?>" +
                         "<ArrayOfLaptop xmlns=\"http://schemas.datacontract.org/2004/07/Microsoft.AspNet.Mvc.Xml\"" +
@@ -839,6 +1013,12 @@ namespace Microsoft.AspNet.Mvc.Xml
         [Fact]
         public async Task PostingModel_WithRequiredAndDataMemberNoRequired_HasValidationErrors()
         {
+            if (TestPlatformHelper.IsMono)
+            {
+                // Mono issue - https://github.com/aspnet/External/issues/18
+                return;
+            }
+            
             // Arrange
             var input = "<?xml version=\"1.0\" encoding=\"utf-8\"?>" +
                         "<Product xmlns=\"http://schemas.datacontract.org/2004/07/Microsoft.AspNet.Mvc.Xml\"" +
@@ -877,6 +1057,12 @@ namespace Microsoft.AspNet.Mvc.Xml
         [Fact]
         public async Task PostingListOfModels_WithRequiredAndDataMemberNoRequired_HasValidationErrors()
         {
+            if (TestPlatformHelper.IsMono)
+            {
+                // Mono issue - https://github.com/aspnet/External/issues/18
+                return;
+            }
+            
             // Arrange
             var input = "<?xml version=\"1.0\" encoding=\"utf-8\"?>" +
                         "<ArrayOfProduct xmlns=\"http://schemas.datacontract.org/2004/07/Microsoft.AspNet.Mvc.Xml\"" +
@@ -917,6 +1103,12 @@ namespace Microsoft.AspNet.Mvc.Xml
         [Fact]
         public async Task PostingModel_WithDeeperHierarchy_HasValidationErrors()
         {
+            if (TestPlatformHelper.IsMono)
+            {
+                // Mono issue - https://github.com/aspnet/External/issues/18
+                return;
+            }
+            
             // Arrange
             var input = "<?xml version=\"1.0\" encoding=\"utf-8\"?>" +
                         "<Store xmlns=\"http://schemas.datacontract.org/2004/07/Microsoft.AspNet.Mvc.Xml\"" +
@@ -961,6 +1153,12 @@ namespace Microsoft.AspNet.Mvc.Xml
         [Fact]
         public async Task PostingModelOfStructs_WithDeeperHierarchy_HasValidationErrors()
         {
+            if (TestPlatformHelper.IsMono)
+            {
+                // Mono issue - https://github.com/aspnet/External/issues/18
+                return;
+            }
+            
             // Arrange
             var input = "<School i:nil=\"true\" " +
                 "xmlns=\"http://schemas.datacontract.org/2004/07/Microsoft.AspNet.Mvc.Xml\" " +
@@ -1004,6 +1202,12 @@ namespace Microsoft.AspNet.Mvc.Xml
         [Fact]
         public async Task PostingModel_WithDictionaryProperty_HasValidationErrorsOnKeyAndValue()
         {
+            if (TestPlatformHelper.IsMono)
+            {
+                // Mono issue - https://github.com/aspnet/External/issues/18
+                return;
+            }
+            
             // Arrange
             var input = "<FavoriteLocations " +
                 "i:nil=\"true\" xmlns=\"http://schemas.datacontract.org/2004/07/Microsoft.AspNet.Mvc.Xml\"" +
@@ -1041,6 +1245,12 @@ namespace Microsoft.AspNet.Mvc.Xml
         [Fact]
         public async Task PostingModel_WithDifferentValueTypeProperties_HasValidationErrors()
         {
+            if (TestPlatformHelper.IsMono)
+            {
+                // Mono issue - https://github.com/aspnet/External/issues/18
+                return;
+            }
+            
             // Arrange
             var input = "<ValueTypePropertiesModel i:nil=\"true\" " +
                 "xmlns=\"http://schemas.datacontract.org/2004/07/Microsoft.AspNet.Mvc.Xml\" " +

@@ -11,6 +11,7 @@ using Microsoft.AspNet.Http;
 using Microsoft.AspNet.Http.Internal;
 using Microsoft.AspNet.Mvc.Xml;
 using Microsoft.AspNet.Routing;
+using Microsoft.AspNet.Testing;
 using Microsoft.AspNet.WebUtilities;
 using Microsoft.Framework.DependencyInjection;
 using Microsoft.Framework.Logging;
@@ -598,6 +599,12 @@ namespace Microsoft.AspNet.Mvc.Core.Test.ActionResults
             string acceptHeader,
             string expectedResponseContentType)
         {
+            if (TestPlatformHelper.IsMono && expectedResponseContentType.Contains("application/xml"))
+            {
+                // Mono issue - https://github.com/aspnet/External/issues/18
+                return;
+            }
+            
             // Arrange
             var objectResult = new ObjectResult(new Person() { Name = "John" });
             var outputFormatters = new IOutputFormatter[] {
@@ -631,6 +638,12 @@ namespace Microsoft.AspNet.Mvc.Core.Test.ActionResults
             string expectedResponseContentType,
             bool respectBrowserAcceptHeader)
         {
+            if (TestPlatformHelper.IsMono)
+            {
+                // Mono issue - https://github.com/aspnet/External/issues/18
+                return;
+            }
+
             // Arrange
             var objectResult = new ObjectResult(new Person() { Name = "John" });
             objectResult.ContentTypes.Add(MediaTypeHeaderValue.Parse("application/xml"));

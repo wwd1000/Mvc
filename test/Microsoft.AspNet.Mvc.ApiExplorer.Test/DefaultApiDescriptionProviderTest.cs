@@ -13,6 +13,7 @@ using Microsoft.AspNet.Mvc.ModelBinding.Metadata;
 using Microsoft.AspNet.Mvc.Routing;
 using Microsoft.AspNet.Routing;
 using Microsoft.AspNet.Routing.Constraints;
+using Microsoft.AspNet.Testing;
 using Microsoft.Framework.OptionsModel;
 using Microsoft.Net.Http.Headers;
 using Moq;
@@ -177,6 +178,12 @@ namespace Microsoft.AspNet.Mvc.Description
             Type constraintType,
             object defaultValue)
         {
+            if (TestPlatformHelper.IsMono)
+            {
+                // Bug - https://github.com/aspnet/External/issues/17
+                return;
+            }
+
             // Arrange
             var action = CreateActionDescriptor(nameof(FromRouting));
             action.AttributeRouteInfo = new AttributeRouteInfo { Template = template };
@@ -219,6 +226,12 @@ namespace Microsoft.AspNet.Mvc.Description
             string methodName,
             string source)
         {
+            if (TestPlatformHelper.IsMono)
+            {
+                // Bug - https://github.com/aspnet/External/issues/17
+                return;
+            }
+
             // Arrange
             var action = CreateActionDescriptor(methodName);
             action.AttributeRouteInfo = new AttributeRouteInfo { Template = template };
@@ -250,6 +263,12 @@ namespace Microsoft.AspNet.Mvc.Description
             string methodName,
             string source)
         {
+            if (TestPlatformHelper.IsMono)
+            {
+                // Bug - https://github.com/aspnet/External/issues/17
+                return;
+            }
+
             // Arrange
             var action = CreateActionDescriptor(methodName);
             action.AttributeRouteInfo = new AttributeRouteInfo { Template = template };
@@ -275,6 +294,12 @@ namespace Microsoft.AspNet.Mvc.Description
             string template,
             bool expectedOptional)
         {
+            if (TestPlatformHelper.IsMono)
+            {
+                // Bug - https://github.com/aspnet/External/issues/17
+                return;
+            }
+
             // Arrange
             var action = CreateActionDescriptor(nameof(FromRouting));
             action.AttributeRouteInfo = new AttributeRouteInfo { Template = template };
@@ -534,6 +559,12 @@ namespace Microsoft.AspNet.Mvc.Description
         [Fact]
         public void GetApiDescription_ParameterDescription_ModelBoundParameter()
         {
+            if (TestPlatformHelper.IsMono)
+            {
+                // Bug - https://github.com/aspnet/External/issues/17
+                return;
+            }
+
             // Arrange
             var action = CreateActionDescriptor(nameof(AcceptsProduct));
 
@@ -562,6 +593,12 @@ namespace Microsoft.AspNet.Mvc.Description
         [Fact]
         public void GetApiDescription_ParameterDescription_SourceFromRouteData()
         {
+            if (TestPlatformHelper.IsMono)
+            {
+                // Bug - https://github.com/aspnet/External/issues/17
+                return;
+            }
+
             // Arrange
             var action = CreateActionDescriptor(nameof(AcceptsId_Route));
 
@@ -579,6 +616,12 @@ namespace Microsoft.AspNet.Mvc.Description
         [Fact]
         public void GetApiDescription_ParameterDescription_SourceFromQueryString()
         {
+            if (TestPlatformHelper.IsMono)
+            {
+                // Bug - https://github.com/aspnet/External/issues/17
+                return;
+            }
+
             // Arrange
             var action = CreateActionDescriptor(nameof(AcceptsId_Query));
 
@@ -596,6 +639,12 @@ namespace Microsoft.AspNet.Mvc.Description
         [Fact]
         public void GetApiDescription_ParameterDescription_SourceFromBody()
         {
+            if (TestPlatformHelper.IsMono)
+            {
+                // Bug - https://github.com/aspnet/External/issues/17
+                return;
+            }
+
             // Arrange
             var action = CreateActionDescriptor(nameof(AcceptsProduct_Body));
 
@@ -613,6 +662,12 @@ namespace Microsoft.AspNet.Mvc.Description
         [Fact]
         public void GetApiDescription_ParameterDescription_SourceFromForm()
         {
+            if (TestPlatformHelper.IsMono)
+            {
+                // Bug - https://github.com/aspnet/External/issues/17
+                return;
+            }
+
             // Arrange
             var action = CreateActionDescriptor(nameof(AcceptsProduct_Form));
 
@@ -641,6 +696,12 @@ namespace Microsoft.AspNet.Mvc.Description
         [Fact]
         public void GetApiDescription_ParameterDescription_SourceFromHeader()
         {
+            if (TestPlatformHelper.IsMono)
+            {
+                // Bug - https://github.com/aspnet/External/issues/17
+                return;
+            }
+
             // Arrange
             var action = CreateActionDescriptor(nameof(AcceptsId_Header));
 
@@ -659,6 +720,12 @@ namespace Microsoft.AspNet.Mvc.Description
         [Fact]
         public void GetApiDescription_ParameterDescription_SourceFromServices()
         {
+            if (TestPlatformHelper.IsMono)
+            {
+                // Bug - https://github.com/aspnet/External/issues/17
+                return;
+            }
+
             // Arrange
             var action = CreateActionDescriptor(nameof(AcceptsFormatters_Services));
 
@@ -673,6 +740,12 @@ namespace Microsoft.AspNet.Mvc.Description
         [Fact]
         public void GetApiDescription_ParameterDescription_SourceFromCustomModelBinder()
         {
+            if (TestPlatformHelper.IsMono)
+            {
+                // Bug - https://github.com/aspnet/External/issues/17
+                return;
+            }
+
             // Arrange
             var action = CreateActionDescriptor(nameof(AcceptsProduct_Custom));
 
@@ -690,6 +763,12 @@ namespace Microsoft.AspNet.Mvc.Description
         [Fact]
         public void GetApiDescription_ParameterDescription_SourceFromDefault_ModelBinderAttribute_WithoutBinderType()
         {
+            if (TestPlatformHelper.IsMono)
+            {
+                // Bug - https://github.com/aspnet/External/issues/17
+                return;
+            }
+
             // Arrange
             var action = CreateActionDescriptor(nameof(AcceptsProduct_Default));
 
@@ -718,6 +797,12 @@ namespace Microsoft.AspNet.Mvc.Description
         [Fact]
         public void GetApiDescription_ParameterDescription_ComplexDTO()
         {
+            if (TestPlatformHelper.IsMono)
+            {
+                // Bug - https://github.com/aspnet/External/issues/17
+                return;
+            }
+
             // Arrange
             var action = CreateActionDescriptor(nameof(AcceptsProductChangeDTO));
             var parameterDescriptor = action.Parameters.Single();
@@ -750,6 +835,12 @@ namespace Microsoft.AspNet.Mvc.Description
         [Fact]
         public void GetApiDescription_ParameterDescription_ComplexDTO_AmbientValueProviderMetadata()
         {
+            if (TestPlatformHelper.IsMono)
+            {
+                // Bug - https://github.com/aspnet/External/issues/17
+                return;
+            }
+
             // Arrange
             var action = CreateActionDescriptor(nameof(AcceptsProductChangeDTO_Query));
             var parameterDescriptor = action.Parameters.Single();
@@ -781,6 +872,12 @@ namespace Microsoft.AspNet.Mvc.Description
         [Fact]
         public void GetApiDescription_ParameterDescription_ComplexDTO_AnotherLevel()
         {
+            if (TestPlatformHelper.IsMono)
+            {
+                // Bug - https://github.com/aspnet/External/issues/17
+                return;
+            }
+
             // Arrange
             var action = CreateActionDescriptor(nameof(AcceptsOrderDTO));
             var parameterDescriptor = action.Parameters.Single();
@@ -813,6 +910,12 @@ namespace Microsoft.AspNet.Mvc.Description
         [Fact]
         public void GetApiDescription_ParameterDescription_ComplexDTO_AnotherLevel_AmbientValueProviderMetadata()
         {
+            if (TestPlatformHelper.IsMono)
+            {
+                // Bug - https://github.com/aspnet/External/issues/17
+                return;
+            }
+
             // Arrange
             var action = CreateActionDescriptor(nameof(AcceptsOrderDTO_Query));
             var parameterDescriptor = action.Parameters.Single();
@@ -844,6 +947,12 @@ namespace Microsoft.AspNet.Mvc.Description
         [Fact]
         public void GetApiDescription_ParameterDescription_BreaksCycles()
         {
+            if (TestPlatformHelper.IsMono)
+            {
+                // Bug - https://github.com/aspnet/External/issues/17
+                return;
+            }
+
             // Arrange
             var action = CreateActionDescriptor(nameof(AcceptsCycle));
             var parameterDescriptor = action.Parameters.Single();
@@ -863,6 +972,12 @@ namespace Microsoft.AspNet.Mvc.Description
         [Fact]
         public void GetApiDescription_ParameterDescription_DTOWithCollection()
         {
+            if (TestPlatformHelper.IsMono)
+            {
+                // Bug - https://github.com/aspnet/External/issues/17
+                return;
+            }
+
             // Arrange
             var action = CreateActionDescriptor(nameof(AcceptsHasCollection));
             var parameterDescriptor = action.Parameters.Single();
@@ -883,6 +998,12 @@ namespace Microsoft.AspNet.Mvc.Description
         [Fact]
         public void GetApiDescription_ParameterDescription_DTOWithCollection_ElementsWithBinderMetadataIgnored()
         {
+            if (TestPlatformHelper.IsMono)
+            {
+                // Bug - https://github.com/aspnet/External/issues/17
+                return;
+            }
+
             // Arrange
             var action = CreateActionDescriptor(nameof(AcceptsHasCollection_Complex));
             var parameterDescriptor = action.Parameters.Single();
@@ -902,6 +1023,12 @@ namespace Microsoft.AspNet.Mvc.Description
         [Fact]
         public void GetApiDescription_ParameterDescription_RedundentMetadata_NotMergedWithParent()
         {
+            if (TestPlatformHelper.IsMono)
+            {
+                // Bug - https://github.com/aspnet/External/issues/17
+                return;
+            }
+
             // Arrange
             var action = CreateActionDescriptor(nameof(AcceptsRedundentMetadata));
             var parameterDescriptor = action.Parameters.Single();
@@ -927,6 +1054,12 @@ namespace Microsoft.AspNet.Mvc.Description
         [Fact]
         public void GetApiDescription_ParameterDescription_RedundentMetadata_WithParameterMetadata()
         {
+            if (TestPlatformHelper.IsMono)
+            {
+                // Bug - https://github.com/aspnet/External/issues/17
+                return;
+            }
+            
             // Arrange
             var action = CreateActionDescriptor(nameof(AcceptsPerson));
             var parameterDescriptor = action.Parameters.Single();
@@ -949,6 +1082,12 @@ namespace Microsoft.AspNet.Mvc.Description
         [Fact]
         public void GetApiDescription_WithControllerProperties_Merges_ParameterDescription()
         {
+            if (TestPlatformHelper.IsMono)
+            {
+                // Bug - https://github.com/aspnet/External/issues/17
+                return;
+            }
+
             // Arrange
             var action = CreateActionDescriptor("FromQueryName", typeof(TestController));
             var parameterDescriptor = action.Parameters.Single();

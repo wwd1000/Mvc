@@ -17,6 +17,10 @@ namespace Microsoft.AspNet.Mvc.ModelBinding.Validation
             // Arrange
             var metadataProvider = TestModelMetadataProvider.CreateDefaultProvider();
             var metadata = metadataProvider.GetMetadataForProperty(typeof(PropertyDisplayNameModel), "MyProperty");
+            // Mono issue - https://github.com/aspnet/External/issues/19
+            var expectedMessage = TestPlatformHelper.IsMono ?
+                "CompareAttribute_MustMatch" :
+                "'MyPropertyDisplayName' and 'OtherPropertyDisplayName' do not match.";
 
             var attribute = new CompareAttribute("OtherProperty");
             var adapter = new CompareAttributeAdapter(attribute);
@@ -31,7 +35,7 @@ namespace Microsoft.AspNet.Mvc.ModelBinding.Validation
 
             // Assert
             var rule = Assert.Single(rules);
-            Assert.Equal("'MyPropertyDisplayName' and 'OtherPropertyDisplayName' do not match.", rule.ErrorMessage);
+            Assert.Equal(expectedMessage, rule.ErrorMessage);
         }
 
         [Fact]
@@ -41,6 +45,10 @@ namespace Microsoft.AspNet.Mvc.ModelBinding.Validation
             // Arrange
             var metadataProvider = TestModelMetadataProvider.CreateDefaultProvider();
             var metadata = metadataProvider.GetMetadataForProperty(typeof(PropertyNameModel), "MyProperty");
+            // Mono issue - https://github.com/aspnet/External/issues/19
+            var expectedMessage = TestPlatformHelper.IsMono ?
+                "CompareAttribute_MustMatch" :
+                "'MyPropertyDisplayName' and 'OtherPropertyDisplayName' do not match.";
             var attribute = new CompareAttribute("OtherProperty");
             var serviceCollection = new ServiceCollection();
             var requestServices = serviceCollection.BuildServiceProvider();
@@ -52,7 +60,7 @@ namespace Microsoft.AspNet.Mvc.ModelBinding.Validation
 
             // Assert
             var rule = Assert.Single(rules);
-            Assert.Equal("'MyProperty' and 'OtherProperty' do not match.", rule.ErrorMessage);
+            Assert.Equal(expectedMessage, rule.ErrorMessage);
         }
 
         [Fact]

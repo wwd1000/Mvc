@@ -159,8 +159,12 @@ namespace Microsoft.AspNet.Mvc.Rendering
         public void PasswordGeneratesUnobtrusiveValidation()
         {
             // Arrange
-            var expected = @"<input data-val=""HtmlEncode[[true]]"" data-val-required=""HtmlEncode[[The Property2 field is required.]]"" " +
-                           @"id=""HtmlEncode[[Property2]]"" name=""HtmlEncode[[Property2]]"" type=""HtmlEncode[[password]]"" />";
+            // Mono issue - https://github.com/aspnet/External/issues/19
+            var expected = TestPlatformHelper.IsMono ?
+                @"<input data-val=""HtmlEncode[[true]]"" data-val-required=""HtmlEncode[[RequiredAttribute_ValidationError]]"" " +
+                @"id=""HtmlEncode[[Property2]]"" name=""HtmlEncode[[Property2]]"" type=""HtmlEncode[[password]]"" />" :
+                @"<input data-val=""HtmlEncode[[true]]"" data-val-required=""HtmlEncode[[The Property2 field is required.]]"" " +
+                @"id=""HtmlEncode[[Property2]]"" name=""HtmlEncode[[Property2]]"" type=""HtmlEncode[[password]]"" />";
             var helper = DefaultTemplatesUtilities.GetHtmlHelper(GetViewDataWithModelStateAndModelAndViewDataValues());
 
             // Act
@@ -266,8 +270,12 @@ namespace Microsoft.AspNet.Mvc.Rendering
         public void PasswordFor_GeneratesUnobtrusiveValidationAttributes()
         {
             // Arrange
-            var expected = @"<input data-val=""HtmlEncode[[true]]"" data-val-required=""HtmlEncode[[The Property2 field is required.]]"" " +
-                           @"id=""HtmlEncode[[Property2]]"" name=""HtmlEncode[[Property2]]"" type=""HtmlEncode[[password]]"" />";
+            // Mono issue - https://github.com/aspnet/External/issues/19
+            var expected = TestPlatformHelper.IsMono ?
+                @"<input data-val=""HtmlEncode[[true]]"" data-val-required=""HtmlEncode[[RequiredAttribute_ValidationError]]"" " +
+                @"id=""HtmlEncode[[Property2]]"" name=""HtmlEncode[[Property2]]"" type=""HtmlEncode[[password]]"" />" :
+                @"<input data-val=""HtmlEncode[[true]]"" data-val-required=""HtmlEncode[[The Property2 field is required.]]"" " +
+                @"id=""HtmlEncode[[Property2]]"" name=""HtmlEncode[[Property2]]"" type=""HtmlEncode[[password]]"" />";
             var helper = DefaultTemplatesUtilities.GetHtmlHelper(GetViewDataWithErrors());
 
             // Act
