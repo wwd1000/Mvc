@@ -1315,7 +1315,7 @@ namespace Microsoft.AspNet.Mvc
                 validationContext,
                 new ModelValidationNode(modelName, modelExplorer.Metadata, model)
                 {
-                    BuildChildNodesUsingModel = true
+                    ValidateAllProperties = true
                 });
             return ModelState.IsValid;
         }
