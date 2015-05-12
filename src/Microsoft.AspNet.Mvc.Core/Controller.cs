@@ -1305,7 +1305,6 @@ namespace Microsoft.AspNet.Mvc
                 modelName);
 
             var validationContext = new ModelValidationContext(
-                modelName,
                 bindingSource: null,
                 validatorProvider: BindingContext.ValidatorProvider,
                 modelState: ModelState,
