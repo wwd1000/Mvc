@@ -3,6 +3,7 @@
 
 using System;
 using System.Collections.Generic;
+using System.Threading.Tasks;
 using Microsoft.AspNet.Http;
 using Microsoft.AspNet.Routing;
 using Microsoft.AspNet.Testing;
@@ -95,6 +96,35 @@ namespace Microsoft.AspNet.Mvc.Core
 
             // Assert
             tempData.Verify(t => t.Keep(), Times.Once());
+        }
+
+        [Fact]
+        public async Task ExecuteResultAsync_UsesRouteName_ToGenerateLocationHeader()
+        {
+            // Arrange
+            var routeName = "orders_api";
+            var urlHelper = new Mock<IUrlHelper>();
+            urlHelper.Setup(u => u.RouteUrl(It.IsAny<UrlRouteContext>()))
+                .Returns("api/orders/10")
+                .Verifiable();
+
+            var httpContext = new Mock<HttpContext>();
+            httpContext.Setup(o => o.Response)
+                .Returns(new Mock<HttpResponse>().Object);
+            httpContext.Setup(o => o.RequestServices.GetService(typeof(IUrlHelper)))
+                .Returns(urlHelper.Object);
+            httpContext.Setup(o => o.RequestServices.GetService(typeof(ITempDataDictionary)))
+                .Returns(new Mock<ITempDataDictionary>().Object);
+            var actionContext = new ActionContext(httpContext.Object, new RouteData(), new ActionDescriptor());
+
+            var result = new RedirectToRouteResult(routeName, new { id = 10 });
+
+            // Act
+            await result.ExecuteResultAsync(actionContext);
+
+            // Assert
+            urlHelper.Verify(u => u.RouteUrl(
+                It.Is<UrlRouteContext>(routeContext => string.Equals(routeName, routeContext.RouteName))));
         }
 
         public static IEnumerable<object[]> RedirectToRouteData
